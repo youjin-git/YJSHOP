@@ -1,0 +1,46 @@
+								
+								<link rel="stylesheet" href="__PUBLIC__/bd/webuploader.css">
+								<script type="text/javascript" src="__PUBLIC__/bd/webuploader.js"></script>
+								<div id="upload_file_{$name}">选择文件</div>
+								<div class="row picture_content">
+									 	
+							   </div>
+								 <script type="text/javascript">
+											    var uploader = WebUploader.create({
+													    auto: true,
+													    // swf文件路径
+													    swf:  '__PUBLIC__/bd/Uploader.swf',
+													    // 文件接收服务端。
+													    server: '{:addons_url("UploadFile://yjshop/uploadfile")}',
+													    // 选择文件的按钮。可选。
+													    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+													    pick: '#upload_file_{$name}',
+													    // 只允许选择图片文件。
+														duplicate :true 
+												});
+												
+												uploader.on( 'uploadSuccess', function(file,data){
+																$('.picture_content').html('<div class="col-xs-4 col-md-3">'+
+																    '<div class="thumbnail">'+
+																		data.filename+
+																     '<input type="hidden" name="{$name}" value="'+data.path+'">'+
+																    '</div>'+
+																  '</div>');
+												});
+									// 文件上传过程中创建进度条实时显示。
+										uploader.on( 'uploadProgress', function( file, percentage ) {
+										    var $li = $( '#'+file.id ),
+										        $percent = $li.find('.progress .progress-bar');
+										    // 避免重复创建
+										    if ( !$percent.length ) {
+										        $percent = $('<div class="progress progress-striped active">' +
+										          '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+										          '</div>' +
+										        '</div>').appendTo( $li ).find('.progress-bar');
+										    }
+										
+										    $li.find('p.state').text('上传中');
+										
+										    $percent.css( 'width', percentage * 100 + '%' );
+										});
+									</script>	

@@ -1,0 +1,41 @@
+			<link rel="stylesheet" href="__PUBLIC__/bd/webuploader.css">
+			<script type="text/javascript" src="__PUBLIC__/bd/webuploader.js"></script>
+			<div class="picture_content picture_content_{$name}">
+				{if condition="!empty($valStr)"}
+								<div class="thumbnail"><i class=" iconfont"></i>
+										 <img src="__ROOT__{$valStr}">
+										 <input type="hidden" name="{$name}" value="{$valStr}">
+								</div>
+				{/if}
+			</div>
+			<div id="upload_picture_{$name}">选择单张图片</div>
+			<script type="text/javascript">
+											var uploader = WebUploader.create({
+													    auto: true,
+													    // swf文件路径
+													    swf:  '__PUBLIC__/bd/Uploader.swf',
+													    // 文件接收服务端。
+													    server: '{:url("file/uploadpicture")}',
+													    // 选择文件的按钮。可选。
+													    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+													    pick: '#upload_picture_{$name}',
+													    // 只允许选择图片文件。
+													  	accept:{
+															  title: 'Images',
+															  extensions: 'jpg,jpeg,png',
+															  mimeTypes: 'image/jpg,image/jpeg,image/png'   //修改这行
+														},
+														duplicate :true 
+											});
+											uploader.on('uploadSuccess', function(file,data){
+																$('.picture_content_{$name}').html('<div class="thumbnail"><i class="iconfont"></i>'+
+																     ' <img src="__ROOT__'+data.path+'">'+
+																     '<input type="hidden" name="{$name}" value="'+data.path+'">'+
+																    '</div>');
+											});
+											$('.picture_content_{$name}').delegate('i','click',function(){
+													if(confirm('确定删除?')==true){
+																$(this).parent().remove();
+													}
+											})
+									</script>	
