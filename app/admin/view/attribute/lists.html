@@ -1,0 +1,57 @@
+{extend name="base/index"}
+
+{block name="content"}
+		   <div class="main-title">
+		<h4>[{$model['title']}]字段列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add',array('model'=>$model['id']))}">新 增</a>
+			<a class="btn btn-info ajax-post"  target-form="ids" href="{:url('remove')}">删 除</a>
+		</div>
+		<div class="main-content" style="margin-top:10px;">
+			<table class="table table-striped">
+	        <thead>
+		        <tr>
+		          <th><input class="check-all" type="checkbox"></th>
+		          <th>编号</th>	
+		             <th>标识</th>	
+		                <th>名称</th>	
+		                   <th>创建时间</th>	
+		             <th>类型</th>	
+		             <th>操作</th>	
+		        </tr>
+	      </thead>
+	      <tbody>
+      		{volist name="data" id="v"}
+		     <tr>
+		        <td><input class="ids" type="checkbox" value="{$v['id']}" name="ids[]"></td>
+				<td>{$v['id']}</td>
+				<td>{$v['name']}</td>
+				<td><input type="text" class="form-control" name="title" data-id="{$v['id']}" value="{$v['title']}"></td>
+				<td>{$v['create_time']|date='Y-m-d H:i:s',###}</td>
+				<td>{$v['type']}</td>
+				<td><a  href="{:url('edit',array('id'=>$v['id']))}">编辑</a></td>
+		     </tr>
+    	{/volist}
+      </tbody>
+      
+   	 </table>
+   	<div class="page">
+   		 {$data->render()}
+   	</div>
+
+</div>
+{/block}
+{block name="script"}
+<script>
+$('.main-content').find('input').change(function(){
+						$.post("{:url('change_info')}",{'id':$(this).data('id'),'field':$(this).attr('name'),'value':$(this).val()},function(data){
+										if(data.code){
+												updateAlert(data.msg,'success',data.url);	
+										}else{
+												updateAlert(data.msg,'danger');	
+										}
+						})	
+})
+</script>
+{/block}

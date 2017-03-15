@@ -1,0 +1,41 @@
+{extend name="base/index"}
+{block name="content"}
+	<script type="text/javascript" src="__PUBLIC__/public/jquery.dragsort.js"></script>
+	 <div class="main-title">
+		<h4>生成模型</h4>
+	 </div>
+	 <div class="bar">
+	<form action="{:url('generate')}" class="yjshop" method="post">
+    	<ul id="myTab" class="nav nav-tabs" role="tablist">
+      	<li role="presentation" class="active"><a href="#key1" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">基础</a></li>
+
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="key1" aria-labelledby="home-tab">
+      
+		  
+		  <div class="form-group">
+		    <label>模型名称</label>
+		    <input type="text" name="name" class="form-control w-250" value=""   placeholder="模型名称">
+		  </div>
+		 <div class="form-group">
+		    <label>模型标识</label>
+		    
+		    <select name="tables" class="form-control w-250">
+		    	{volist name="tables" id="v"}
+				  <option value="{$v}">{$v}</option>
+				{/volist}
+			</select>
+		  </div>
+		  <div class="form-group">
+		    	<label>模型类型</label>
+				<select class="form-control w-250">
+				  <option value="1">独立模型</option>
+				</select>
+		  </div>
+      </div>
+    </div>
+   	 	<button type="submit" target-form="yjshop"  class="ajax-post btn btn-default">Submit</button>
+   	</form>
+  </div>
+{/block}

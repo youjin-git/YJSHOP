@@ -1,0 +1,117 @@
+{extend name="base/index"}
+{block name="content"}
+
+	 <div class="main-title">
+		<h4>编辑模型</h4>
+	 </div>
+	 <div class="bar">
+	<form action="{:url('upload')}" method="post">
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#key1" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">基础</a></li>
+      <li role="presentation" class=""><a href="#key2" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">设计</a></li>
+     </ul>
+    
+    <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="key1" aria-labelledby="home-tab">
+      
+		  <div class="form-group">
+		    <label>模型名称</label>
+		    <input type="text"  name="title" class="form-control w-250"  value="{$data['title']}"  placeholder="模型名称">
+		  </div>
+		  <div class="form-group">
+		    <label>模型标识</label>
+		    <input type="text" name="name" class="form-control w-250" value="{$data['name']}"   placeholder="模型标识">
+		  </div>
+		  <div class="form-group">
+		    <label>模型类型</label>
+				<select class="form-control w-250">
+				  <option value="1">独立模型</option>
+				</select>
+		  </div>
+		  
+       </div>
+      <div role="tabpanel" class="tab-pane fade" id="key2" aria-labelledby="profile-tab">
+          <div class="form-group">
+          	   <label>字段管理</label>
+		    <div class="controls w-250">
+			 <a href="{:url('attribute/lists',array('model'=>$data['id']))}" target="_blank" class="list-group-item active ">
+			         	 字段列表  <span class="glyphicon glyphicon-cog" style="float: right;top:4px"></span>         
+			  </a>
+			<div class="list-group " style="overflow-y: scroll;height: 254px;">
+			{volist name="fields" id="v"}
+		      <a href="#" class="list-group-item">{$v['title'].'['.$v['name'].']'}</a>
+		  	{/volist}
+			</div>
+		  </div>  
+		  </div>  
+		  <div class="form-group">
+		    <label>字段别名定义</label>
+		    <textarea style="height: 130px;" class="form-control w-400" rows="3"></textarea>
+		  </div>
+		  
+		  <div class="form-group">
+		    	<label>表单显示分组</label>
+		  		<input type="text" name="field_group" class="form-control w-400"  value="{$data['field_group']}" />
+		  </div>
+		  	  <div class="form-group">
+		    <label>字段管理</label>
+		   <div class="form-inline">
+		   	
+			  {volist name=":parse_field_attr($data['field_group'])" key="kk" id="v"}
+					    <div class="controls form-group">
+						     <div class="list-group-item active ">
+						  		  	{$v}
+						     </div>
+						<ul class="list-group needdragsort" data-group="{$kk}"  style="overflow-y: scroll;height: 254px;">
+							 {volist name="fields" key="k" id="vv"}
+								 
+								 {if condition="(!isset($vv['group']) and $kk eq 1)  or (isset($vv['group']) and $vv['group'] eq $kk)"}
+					     	 		<li class="list-group-item">
+					     	 			{$vv['title']} [{$vv['name']}]
+					     	 			<input type="hidden" name="field_sort[{$kk}][]" id="" value="{$vv['id']}" />
+					     	 		</li>
+					     		 {/if}
+					     	 {/volist}
+					    </ul>
+					    
+					  </div>
+			  {/volist}
+		  
+		  </div>  
+		    </div>
+		    <div class="form-group">
+		    <label>列表定义</label>
+		    <textarea style="height: 130px;" class="form-control w-400" name="list_grid" rows="3">{$data['list_grid']}</textarea>
+		  </div>
+		    <div class="form-group">
+		    <label>默认搜索</label>
+		    <input type="text" name=""class="form-control w-400" value="" />
+		  </div>
+	 </div> 
+	 
+       <div role="tabpanel" class="tab-pane fade" id="key3" aria-labelledby="profile-tab">
+       					
+       </div>
+    </div>
+    <input type="hidden" name="id"  value="{$data['id']}"/>
+   	 	<button type="submit" class="btn btn-default">Submit</button>
+   	</form>
+  </div>
+  
+{/block}
+{block name="script"}
+<script>
+//拖曳插件初始化
+$(function(){
+	$(".needdragsort").dragsort({
+	     dragSelector:'li',
+	     placeHolderTemplate: '<li class="draging-place">&nbsp;</li>',
+	     dragBetween:true,	//允许拖动到任意地方
+	     dragEnd:function(){
+	     	 var self = $(this);
+	     	 self.find('input').attr('name', 'field_sort[' + self.closest('ul').data('group') + '][]');
+	     }
+	 });
+})
+</script>
+{/block}

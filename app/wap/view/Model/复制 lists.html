@@ -1,0 +1,38 @@
+{extend name="Base/index"}
+
+{block name="content"}
+		   <div class="main-title">
+		<h4>[模型] 列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add?model='.$model['id'])}">新 增</a>
+			<a class="btn btn-info" href="{:url('delete?model='.$model['id'])}">删 除</a>
+		</div>
+		
+	<div class="main-content" style="margin-top:10px;">
+		<table class="table table-striped">
+        <thead>
+	        <tr>
+	        
+	          <th><input class="check-all" type="checkbox"></th>
+	           			{volist name="grids" id="field"}
+                            <th>{$field.title}</th>
+                        {/volist}
+	        </tr>
+      </thead>
+      <tbody>
+      	 {volist name="lists" id="v"}
+		     <tr>
+		        <td><input class="ids" type="checkbox" value="150114" name="ids[]"></td>
+					  {volist name="grids" id="grid"}
+					      <td>
+							{:get_list_field($v,$grid)}					      
+					      </td>
+					  {/volist}
+		     </tr>
+        {/volist}
+      </tbody>
+   	 </table>
+   	 {$page}
+</div>
+{/block}

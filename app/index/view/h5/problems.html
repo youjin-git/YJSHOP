@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <title>便利淘 常见问题</title>
+</head>
+<body>
+	<ul class="qUl">
+					<li>
+				<span class="qSpan">什么是便利淘？</span>
+				<div class="qDiv"><span >通过便利淘购买淘宝、天猫商品,即可每天获得该商品交易金额赚取收益,收益可提现。</span>
+			</li>
+					<li>
+				<span class="qSpan">便利淘如何计算收益？</span>
+				<div class="qDiv"><p>
+	<span>按照您的实际支付金额存入便利钱包,消费存款乘以年化收益百分比来计算。</span> 
+</p>
+<p>
+	<span>例如:通过便利淘去淘宝、天猫购买1000元的东西,便利钱包年化收益为20%时,每年会有200元收益。如购买10000元,每年会有2000元收益,年化收益会根据您的消费动态调整。</span> 
+</p>
+</div>
+			</li>
+					<li>
+				<span class="qSpan">我刚下的订单怎么淘宝订单没有显示？</span>
+				<div class="qDiv"><p>
+	正常情况下,可在淘宝订单中查看订单状态,订单在下单后1-30分钟内被记录到。
+</p>
+</div>
+			</li>
+					<li>
+				<span class="qSpan">便利淘能用购物车吗？</span>
+				<div class="qDiv">可以使用购物车,但是购买的商品必须通过便利淘进入商家购买,未通过便利淘将商品放入购物车则无法存入便利淘,获得收益。</div>
+			</li>
+					<li>
+				<span class="qSpan">我们订单要多久能存入？</span>
+				<div class="qDiv">正常情况下,可在淘宝订单中查看订单状态,所有的订单在下单后1-30分钟内会被存入便利淘<br />
+									如果超出30分钟未存入,请及时咨询客服联系。
+			</li>
+					<li>
+				<span class="qSpan">同一款商品,购买多件,是否都有收益？</span>
+				<div class="qDiv"><p>
+	理论上同一款产品可购买多件,购买的越多,您存入的金额越多,您在便利淘的年化收益越高收益也就越多。
+</p>
+</div>
+			</li>
+			<li>
+				<span class="qSpan">存入便利淘后,什么时候开始收益？</span>
+				<div class="qDiv"><p>
+	在存入便利淘后,即日起开始转化为收益(利息)。
+</p>
+</div>
+			</li>
+			<li>
+				<span class="qSpan">商家使用优惠券是否存入便利淘？</span>
+				<div class="qDiv"><p>
+	大部分商城的存入金额将除去优惠券部分,按照您的实际支付金额存入便利淘。<br />例如:商品50元,收益比例10%,优惠券5元,那么收益金额=(50-5)*10%=4.5元。<br />
+	请注意:若商城则对优惠券等有相关限制,则会影响您存入便利淘的金额,请您在购买前仔细查看商城规则。
+</p>
+</div>
+			</li>
+			</ul>
+
+<style>
+*{margin: 0;padding: 0;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;}
+body{padding-bottom: 30px;background: #f9f6f6;font-size: 4vw;line-height: 1.5;}
+.qUl{list-style: none;}
+.qUl li{border-bottom: 1px solid #DCDCDC}
+.qUl .qSpan{font-size: 5vw;color: #222;height: 12.87vw;line-height: 12.87vw;padding-left: 4vw;display: block;background: #fff;box-sizing: border-box;}
+.qUl div{color: #666;padding: 2.86vw 4.29vw;background: #f9f6f6;display: none;}
+</style>
+
+<script>
+	var qUl = document.getElementsByClassName('qUl')[0];
+	qUl.addEventListener('click',function(e) {
+		var target = e.target;
+		var node = target.nodeName.toLowerCase();
+		if(node === "span") {
+			var qDiv = target.nextSibling.nextSibling,
+				allDiv = document.getElementsByClassName('qDiv'),
+				qBol = false;
+			if(qDiv.style.display == "block") {
+				qBol = true
+			}
+			for(var i = 0; i < allDiv.length; i++) {
+				allDiv[i].style.display = "none"
+			}
+			qDiv.style.display = qBol?'none':'block';
+		}
+	});
+</script></body>
+</html>

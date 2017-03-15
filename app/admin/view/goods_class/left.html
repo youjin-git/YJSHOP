@@ -1,0 +1,19 @@
+<div class="left-wrapper ">
+            <div class="sidebar-collapse">
+                <ul  id="side-menu">
+                	{volist name="goods_class"  id="menu"}
+	                    <li >
+	                    <span class="nav-label"><i class="iconfont"></i>{$menu['name']}</span>
+	                    	{if condition="isset($menu['_child'])"}
+			                <ul class="nav" {if condition="!isset($menu['current'])"}style="display: none;"{/if}><!--collapse-->
+					              {volist name="menu._child" id="v"}
+	<li {if condition="Request()->has('class_id_2')&&$v['id'] == Request()->param('class_id_2')"} class="current" {/if} ><a href="{:url('lists',array('class_id_2'=>$v['id']))}">{$v['name']}</a></li>
+					             {/volist}
+		                    </ul>
+		                  {/if}
+                 	{/volist}
+                </ul>
+
+            </div>
+      
+ </div>

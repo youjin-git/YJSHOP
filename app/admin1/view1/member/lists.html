@@ -1,0 +1,45 @@
+{extend name="Base/index"}
+
+{block name="content"}
+		   <div class="main-title">
+		<h4>[模型] 列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add')}">新 增</a>
+			<a class="btn btn-info ajax-post confirm"  target-form="ids"  href="javascript:void(0);" url="{:url('delete')}">删 除</a>
+		</div>
+	<div class="main-content" style="margin-top:10px;">
+		<table class="table table-striped">
+        <thead>
+	        <tr>
+	          <th><input class="check-all" type="checkbox"></th>
+	          <th>编号</th>	
+	          <th>用户名</th>	
+	          <th>真实姓名</th>
+	            <th>登录次数</th>
+	             <th>最后登录时间</th>
+	            <th>状态</th>	
+	            <th>操作</th>
+	        </tr>
+      </thead>
+      <tbody>
+      		{volist name="data" id="v"}
+		     <tr>
+		        <td><input class="ids" type="checkbox" value="{$v['uid']}" name="ids[]"></td>
+				<td>{$v['uid']}</td>
+				<td>{$v['username']}</td>
+				<td>{$v['nickname']}</td>
+				<td>{$v['login']}</td>
+				<td>{:date('Y-m-d',$v['last_login_time'])}</td>
+				<td>{$v['status']?'正常':'禁用'}</td>
+				<td><a  href="{:url('edit',array('id'=>$v['uid']))}">编辑</a></td>
+		     </tr>
+    	{/volist}
+      </tbody>
+   	 </table>
+   	<div class="page">
+   		 {$data->render()}
+   	</div>
+
+</div>
+{/block}

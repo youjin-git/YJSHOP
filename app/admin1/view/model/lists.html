@@ -1,0 +1,47 @@
+{extend name="base/index"}
+
+{block name="content"}
+		   <div class="main-title">
+		<h4>[模型] 列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add')}">新 增</a>
+			<a class="btn btn-info ajax-post confirm"  target-form="ids"  href="{:url('delete')}">删 除</a>
+			<a class="btn btn-info" href="{:url('generate')}">生成</a>
+		</div>
+	<div class="main-content" style="margin-top:10px;">
+		<table class="table table-striped">
+        <thead>
+	        <tr>
+	          <th><input class="check-all" type="checkbox"></th>
+	          <th>编号</th>	
+	             <th>标识</th>	
+	                <th>名称</th>	
+	                   <th>创建时间</th>	
+	                   
+	                  <th>操作</th>	
+	        </tr>
+      </thead>
+      <tbody>
+      		{volist name="data" id="v"}
+		     <tr>
+		        <td><input class="ids" type="checkbox" value="{$v['id']}" name="ids[]"></td>
+				<td>{$v['id']}</td>
+				<td>{$v['name']}</td>
+				<td>{$v['title']}</td>
+				<td>{$v['create_time']}</td>
+				<td>
+					<a class="ajax-get"  href="{:url('action',array('id'=>$v['id']))}">生成控制器</a>
+					<a class="ajax-get"  href="{:url('view',array('id'=>$v['id']))}">生成view</a>
+					<a  href="{:url('edit',array('id'=>$v['id']))}">编辑</a>
+				</td>
+		     </tr>
+    	{/volist}
+      </tbody>
+   	 </table>
+   	<div class="page">
+   		 {$data->render()}
+   	</div>
+
+</div>
+{/block}

@@ -1,0 +1,45 @@
+<div style="padding: 5px;" id="type">
+		<label class="radio-inline">
+		<input type="radio" name="type" {eq name="value['type']" value="1"}checked{/eq} id="check1" value="1">单页栏目</label>
+		<label class="radio-inline">
+		<input type="radio" name="type" {eq name="value['type']" value="2"}checked{/eq} id="check0" value="2">模型栏目</label>
+		<label class="radio-inline">
+		<input type="radio" name="type" {eq name="value['type']" value="3"}checked{/eq} id="check0" value="3">url链接</label>
+</div>
+<div  style="display: none;padding: 10px;"  id="url">
+<label>url</label>
+<input type="text" name="url"  class="form-control w-200" value="{$value['url']}" placeholder="url或者控制器">
+</div>
+<div  style="display: none;padding: 10px;"  id="model_id">
+			 <label>文档模型</label>
+			<div style="padding: 5px;">
+			{volist name="list" id="v"}
+			<label class="radio-inline">
+			<input type="radio" {eq name="value['model_id']" value="$v['id']"}checked{/eq} name="model_id" id="check1" value="{$v['id']}">{$v['title']}											</label>
+			</label>	
+			{/volist}
+			</div>
+</div>						  
+<script>
+	nav_type_show({$value['type']});
+	$('#type input').change(function(){
+			var type = $(this).val();
+			nav_type_show(type);
+	})
+	function nav_type_show(type){
+	switch(parseInt(type)){
+					case 1:
+					$('#url').hide();
+					$('#model_id').hide();
+					break;
+					case 2:
+					$('#url').hide();
+					$('#model_id').show();
+					break;
+					case 3:
+					$('#url').show();
+					$('#model_id').hide();
+					break;
+			}
+	}
+</script>

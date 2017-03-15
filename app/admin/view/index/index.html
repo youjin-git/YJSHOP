@@ -1,0 +1,44 @@
+{extend name="base/index"}
+{block name="style"}
+<style>
+body{
+	padding:0px;
+}
+.masthead h1 {
+    font-size: 100px;
+}
+.right-wrapper{
+	padding:0px;
+	margin-top: 30px;
+	text-align: center;
+}
+.jumbotron{
+	    padding: 100px;
+background: none;
+color: white;
+}
+body{
+	overflow: hidden;
+background:linear-gradient(20deg,#020031 0,#6d3353 100%);
+}
+</style>
+{/block}
+{block name="content"}
+<div class="jumbotron masthead">
+      <div class="container">
+        <h1>YJSHOP1.0</h1>
+        <h2>95%的后台功能,不用写一句代码的后台框架。</h2>
+        <p class="masthead-button-links">
+          		<a class="btn btn-lg btn-primary btn-shadow" href="//shang.qq.com/wpa/qunwpa?idkey=60bb23320230cf0463c4461d479791d39700779ee6cc521370f0b2f11a54be2d" target="_blank" role="button" onclick="">加入qq群下载完整版</a>
+        </p>
+      </div>
+    </div>
+{/block}
+{block name="script"}
+<script>
+ var $window = $(window);
+          $window.resize(function(){
+                $("body").css("min-height", $window.height());
+          }).resize();
+</script>
+{/block}

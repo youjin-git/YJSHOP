@@ -1,0 +1,44 @@
+{extend name="base/index"}
+
+{block name="content"}
+		   <div class="main-title">
+		<h4>[{$model['title']}]字段列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add',array('model'=>$model['id']))}">新 增</a>
+			<a class="btn btn-info ajax-post"  target-form="ids" href="{:url('remove')}">删 除</a>
+		</div>
+	<div class="main-content" style="margin-top:10px;">
+		<table class="table table-striped">
+        <thead>
+	        <tr>
+	          <th><input class="check-all" type="checkbox"></th>
+	          <th>编号</th>	
+	             <th>标识</th>	
+	                <th>名称</th>	
+	                   <th>创建时间</th>	
+	             <th>状态</th>	
+	             <th>操作</th>	
+	        </tr>
+      </thead>
+      <tbody>
+      		{volist name="data" id="v"}
+		     <tr>
+		        <td><input class="ids" type="checkbox" value="{$v['id']}" name="ids[]"></td>
+				<td>{$v['id']}</td>
+				<td>{$v['name']}</td>
+				<td>{$v['title']}</td>
+				<td>{$v['create_time']}</td>
+				<td>{$v['status']}</td>
+				<td><a  href="{:url('edit',array('id'=>$v['id']))}">编辑</a></td>
+		     </tr>
+    	{/volist}
+      </tbody>
+      
+   	 </table>
+   	<div class="page">
+   		 {$data->render()}
+   	</div>
+
+</div>
+{/block}

@@ -1,0 +1,38 @@
+{extend name="base/index"}
+{block name="left"}
+{:action('cms/left',[input('nav_id')],'widget')}
+{/block}
+{block name="content"}
+		<div class="main-title">
+		<h4>[商品] 添加</h4>
+		</div>
+		<div class="bar">
+			<ul id="myTab" class="nav nav-tabs" role="tablist">
+    	    	<li role="presentation" class="active"><a href="#key1" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">基础</a></li>
+    	    	<li role="presentation"><a href="#key2" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">图片</a></li>
+    	    </ul>
+		<form action="{:url('update')}" class="yjshop" method="post">
+    	  <div id="myTabContent" class="tab-content">
+	      <div role="tabpanel" class="tab-pane fade active in" id="key1" aria-labelledby="home-tab">
+			  <div class="form-group">
+			    <label>url</label>
+			    <input type="text" name="url" class="form-control w-250" value="{$data['url']}" placeholder="url或着控制器">
+			  </div>
+	      </div>
+	      <div role="tabpanel" class="tab-pane fade" id="key2" aria-labelledby="home-tab">
+	      				 <div class="form-group">
+							    <label>图标</label>
+								{:hook('UploadImages',array('name'=>'icon','value'=>$data['icon']))}
+						 </div>
+	      </div>
+	      
+    </div>
+    </div>
+   		 <input type="hidden" name="id" value="{$data['id']}">
+		<button type="submit" target-form="yjshop" class="ajax-post btn btn-default">提交</button>
+   	
+	 </div>
+		   	
+		   	</form>
+  		</div>
+{/block}

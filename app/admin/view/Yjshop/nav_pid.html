@@ -1,0 +1,6 @@
+<select class="form-control w-250" name="{$name}">
+				 <option value="0">顶级栏目</option>
+				 {volist name="list" id="v"}
+						 <option value="{$v['id']}">{$v['name']}</option>
+				 {/volist}
+</select>

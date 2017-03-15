@@ -1,0 +1,96 @@
+{extend name="base/index"}
+{block name="content"}
+        <div class="main-title">
+            <h4>[{$model['title']}] 列表
+	        {if condition="isset($search_list)"}
+	        	【 {if condition="Request()->has($model['search_list'])&&$search=Request()->param($model['search_list'])"}<a href="{:url('lists')}">全部</a>{else/}全部{/if}
+	        	{volist name="search_list"  id="v"}
+	        	{if condition="isset($search)&&$search==$key"}
+	        	{$v}
+	        	{else\}
+	        	<a href="{:url('lists',array($model['search_list']=>$key))}">{$v}</a>
+	        	{/if}{/volist}】
+	        {/if}
+	        </h4>
+        </div>
+        <div class="bar">
+            <a class="btn btn-info" href="{:url('add')}">新 增</a>
+            <a class="btn btn-info ajax-post confirm"  target-form="ids"  href="{:url('delete')}">删 除</a>
+              <div id="search" style="float: right;">
+			  <form class="form-inline" role="form" method="get">
+
+			  {volist name="search_key" key="key" id="v"}
+				  {switch name="v.type"}
+				  	{case value="string"}
+						  <div class="form-group">
+						    <div class="input-group">
+						      <div class="input-group-addon">{$v['name']}</div>
+						      <input class="form-control" name="{$v['key']}" type="text" placeholder="{$v['name']}" value="<?php echo Request()->has($v['key'])?Request()->get($v['key']):'' ?>">
+						    </div>
+						  </div>
+					{/case}
+					{case value='date'}
+					{case value='datetime'}
+					<div class="btn-group">
+					  <div   class="time">
+					    {$v['name']} <span class="caret"></span>
+					 </div>
+					  <div class="dropdown-menu" role="menu" style="left:-293px;width:390px;padding: 5px 8px;">
+					 	   <input type="text" class="form-control w-250" name="start_{$v['key']}"  id="start_{$v['key']}" value="<?php echo Request()->has('start_'.$v['key'])?Request()->get('start_'.$v['key']):'';?>" placeholder="开始时间"> -
+					       <input type="text" class="form-control w-250" name="end_{$v['key']}"  id="end_{$v['key']}" value="<?php echo Request()->has('end_'.$v['key'])?Request()->get('end_'.$v['key']):'';?>" placeholder="结束时间">
+						<script>
+							$("#start_{$v['key']}").datetimepicker();
+							$("#end_{$v['key']}").datetimepicker();
+						</script>
+					 </div>
+					</div>
+					{/case}
+					{/case}
+					{case value='select'}
+							<div class="form-group">
+								   <div class="input-group">
+								      <div class="input-group-addon">{$v['name']}</div>
+								      <select name="{$v['key']}" class="form-control">
+								      	<option value="">全部</option>
+								      	{volist name=":parse_field_attr($v['extra'])"   id="vv"}
+								      	<option  {if condition="Request()->has($v['key'])&& $key == Request()->get($v['key'])"}selected{/if}  name="key"  value="{$key}">{$vv}</option>
+								      	{/volist}
+								      </select>
+								   </div>
+							  </div>
+					{/case}
+				  {/switch}
+			  {/volist}
+			    {notempty name="search_key"}
+				  <button type="submit" class="search_btn btn btn-default">搜索</button>
+			  {/notempty}
+			</form>
+            </div>
+        </div>
+        
+        <div class="main-content" style="margin-top:10px;">
+            <table class="table table-striped">
+            <thead>
+                <tr>
+                  <th><input class="check-all" type="checkbox"></th>
+                    {volist name="list_grids" id="field"}
+                            <th>{$field['title']}</th>
+                    {/volist}
+                </tr>
+          </thead>
+          <tbody>
+            {volist name="lists" id="v"}
+                 <tr>
+                    <td><input class="ids" type="checkbox" value="{$v[$model['need_pk']]}" name="ids[]"></td>  
+                    {volist name="list_grids" id="field"}
+                         	 <td>{:get_list_field($v,$field,$model['need_pk'])}</td>
+                    {/volist}
+                 </tr>
+            {/volist}
+          </tbody>
+        </table>
+        <div class="page">
+             {$lists->render()}
+        </div>
+</div>
+{/block}

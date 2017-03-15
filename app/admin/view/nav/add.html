@@ -1,0 +1,129 @@
+{extend name="base/index"}
+{block name="content"}
+	<div class="main-title">
+		<h4>[{$model['title']}] 添加</h4>
+		</div>
+<div class="bar">
+	<form action="{:url('update')}" class="yjshop"  method="post">
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+    	{volist name=":parse_config_attr($model['field_group'])" id="group"}
+    		<li role="presentation"  {eq name="key" value='1'}class="active"{/eq}><a href="#key{$key}" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">{$group}</a></li>
+    	{/volist}
+    	</ul>
+    <div id="myTabContent" class="tab-content">
+    	{volist name=":parse_config_attr($model['field_group'])" id="group"}
+      <div role="tabpanel" class="tab-pane  {eq name="key" value='1'}active{/eq}"   id="key{$key}" aria-labelledby="home-tab">
+      	{volist name="fields[$key]" id="field"}
+      				{if condition="$field['is_show']==1 || $field['is_show']==2"}
+      					{switch name="field.type"}
+      						{case value="num"}
+					      		<div class="form-group">
+							    <label>{$field['title']}</label>
+							    <input type="text" name="{$field['name']}" class="form-control w-250" value="" placeholder="{$field['title']}">
+							    </div>
+						    {/case}
+						   	{case value="string"}
+					      		<div class="form-group">
+							   	 <label>{$field['title']}</label>
+							    	<input type="text" name="{$field['name']}" class="form-control w-250" value="" placeholder="{$field['title']}">
+							    </div>
+						    {/case}
+						    {case value="textarea"}
+						    <div class="form-group">
+						    <label>{$field['title']}</label>
+							  <textarea style="height: 130px;"   name="{$field['name']}" class="form-control w-400" rows="3"></textarea>
+						    </div>
+						    {/case}
+						    {case value="checkbox"}
+						    <div class="form-group">
+						    	   <label>{$field['title']}</label>
+							    	<div style="padding: 5px;">
+							    		{volist name=":parse_field_attr($field['extra'])" id="vo"}
+							    		<label class="checkbox-inline">
+									 			<input type="checkbox" name="{$field['name']}[]"   id="check{$key}" value="{$key}">{$vo}
+										</label>
+	                                    {/volist}
+									</div>			
+						    </div>
+						    {/case}
+						    
+						    {case value="picture"}
+						    	 <div class="form-group">
+							   	 	<label>{$field['title']}</label>
+									{:hook('UploadImage',array('name'=>$field['name'],'value'=>''))}
+								</div>
+						    {/case}
+						    {case value="pictures"}
+						     <div class="form-group">
+							    <label>{$field['title']}</label>
+								{:hook('UploadImages',array('name'=>$field['name'],'value'=>''))}
+								</div>
+						    {/case}
+						    {case value="radio"}
+								<div class="form-group">
+							    <label>{$field['title']}</label>
+							    	<div style="padding: 5px;">
+							    		{volist name=":parse_field_attr($field['extra'])" id="vo"}
+											<label class="radio-inline">
+											 	<input type="radio"  name="{$field['name']}"   id="check{$key}" value="{$key}">{$vo}
+											</label>
+										 {/volist}
+									</div>
+							  </div>
+						    {/case}
+						     {case value="select"}
+								<div class="form-group">
+							    <label>{$field['title']}</label>
+							    	<select class="form-control w-250" name="{$field['name']}">
+							    			{volist name=":parse_field_attr($field['extra'])" id="vo"}
+				 								 <option value="{$key}">{$vo}</option>
+				 							{/volist}
+									</select>
+							  </div>
+						    {/case}
+						    {case value="editor"}
+						     <div class="form-group">
+							    <label>{$field['title']}</label>
+									{:hook('adminArticleEdit',array('name'=>$field['name'],'value'=>''))}
+								</div>
+						    {/case}
+						    {case value="datetime"}
+							     <div class="form-group">
+								    <label>{$field['title']}</label>
+										<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap-datetimepicker.min.css" media="all">
+										<script type="text/javascript" src="__PUBLIC__/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+										<input type="text" class="form-control w-250" name="{$field['name']}"  id="datetimepicker_{$field['name']}" value="" readonly>
+										<script>
+										 	$("#datetimepicker_{$field['name']}").datetimepicker();
+										</script>
+								</div>
+									
+						    {/case}
+						     {case value="date"}
+							      <div class="form-group">
+								    <label>{$field['title']}</label>
+								<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap-datetimepicker.min.css" media="all">
+								<script type="text/javascript" src="__PUBLIC__/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+								
+								  <input type="text" class="form-control w-250" name="{$field['name']}"  id="datetimepicker_{$field['name']}" value="" readonly>
+									<script>
+									   	 $("#datetimepicker_{$field['name']}").datetimepicker();
+									</script>
+								</div>
+						    {/case}
+						    {case value="widget"}
+							      	<div class="form-group">
+									 	  <label>{$field['title']}</label>
+									 	 {:action('yjshop/'.$field['extra'],['name'=>$field['name'],'value'=>''],'widget')}
+									</div>
+						    {/case}
+						 {/switch}
+      				{/if}
+      	{/volist}
+      </div>
+   	  {/volist}
+    </div>
+  		 <button type="submit" target-form="yjshop"  class="ajax-post  btn  btn-default">Submit</button>
+   	</form>
+  </div>
+{/block}

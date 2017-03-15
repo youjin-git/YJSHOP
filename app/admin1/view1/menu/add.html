@@ -1,0 +1,63 @@
+{extend name="Base/index"}
+{block name="content"}
+	<script type="text/javascript" src="__PUBLIC__/public/jquery.dragsort.js"></script>
+	 <div class="main-title">
+		<h4>菜单添加</h4>
+	 </div>
+	 <div class="bar">
+	<form action="{:url('add')}" class="yjshop" method="post">
+    	<ul id="myTab" class="nav nav-tabs" role="tablist">
+      	<li role="presentation" class="active"><a href="#key1" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">基础</a></li>
+
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="key1" aria-labelledby="home-tab">
+      
+		  <div class="form-group">
+		    <label>菜单名称</label>
+		    <input type="text" name="title" class="form-control w-250"  value=""  placeholder="模型名称">
+		  </div>
+		  <div class="form-group">
+		    <label>菜单链接</label>
+		    <input type="text" name="url" class="form-control w-250" value=""   placeholder="menu/lists">
+		  </div>
+		  <div class="form-group">
+		    <label>菜单属于</label>
+				<select name="pid" class="form-control w-250">
+				  <option value="0">顶级分类</option>
+				  {volist name="data" id="v"}
+				  	<option value="{$v['id']}">{$v['title']}</option>
+				  	{if condition="isset($v['_child'])"}
+				  		{volist name="v['_child']" id="vv"}
+				  				<option value="{$vv['id']}">&nbsp;&nbsp;└{$vv['title']}</option>
+				  				
+				  		{/volist}
+				  	{/if}
+				  		
+				  	</volist>
+				  {/volist}
+				</select>
+		  </div>
+		   <div class="form-group">
+		    <label>分组</label>
+		    <input type="text" name="group" class="form-control w-250"  value=""   placeholder="">
+		  </div>
+		  <div class="form-group">
+		    <label>是否隐藏</label>
+				<select name="hide" class="form-control w-200">
+				  <option value="0">否</option>
+				  <option value="1">是</option>
+				</select>
+		  </div>
+		  <div class="form-group">
+		    <label>排序</label>
+		    <input type="text" name="sort" class="form-control w-250"  value=""   placeholder="">
+		  </div>
+		  
+      </div>
+    </div>
+   	 	<button type="submit" target-form="yjshop" class="ajax-post btn btn-default">Submit</button>
+   	</form>
+  </div>
+  
+{/block}

@@ -1,0 +1,39 @@
+{extend name="Base/index"}
+{block name="content"}
+ 
+        <div class="main-title">
+            <h4>[{$model['title']}] 列表</h4>
+        </div>
+        <div class="bar">
+            <a class="btn btn-info" href="{:url('add')}">新 增</a>
+            <a class="btn btn-info ajax-post confirm"  target-form="ids"  href="{:url('delete')}">删 除</a>
+        </div>
+        <div class="main-content" style="margin-top:10px;">
+            <table class="table table-striped">
+            <thead>
+                <tr>
+                  <th><input class="check-all" type="checkbox"></th>
+                    {volist name="list_grids" id="field"}
+                            <th>{$field['title']}</th>
+                    {/volist}
+                </tr>
+          </thead>
+          <tbody>
+          <?php
+         
+          ?>
+            {volist name="lists" id="v"}
+                 <tr>
+                    <td><input class="ids" type="checkbox" value="{$v['id']}" name="ids[]"></td>  
+                    {volist name="list_grids" id="field"}
+                         	 <td>{:get_list_field($v,$field)}</td>
+                    {/volist}
+                 </tr>
+            {/volist}
+          </tbody>
+        </table>
+        <div class="page">
+             {$lists->render()}
+        </div>
+</div>
+{/block}

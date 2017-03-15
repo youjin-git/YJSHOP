@@ -1,0 +1,27 @@
+{extend name="Base/index"}
+
+{block name="content"}
+		   <div class="main-title">
+		<h4>配置列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add')}">新 增</a>
+			<a class="btn btn-info" href="{:url('delete')}">删 除</a>
+		</div>
+		
+	<div class="main-content" style="margin-top:10px;">
+		<table class="table table-striped">
+        <thead>
+	        <tr>
+	        
+	          <th><input class="check-all" type="checkbox"></th>
+	           		
+	        </tr>
+      </thead>
+      <tbody>
+      	
+      </tbody>
+   	 </table>
+   
+</div>
+{/block}

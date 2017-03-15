@@ -1,0 +1,250 @@
+<style>
+.tagsinput{
+	width: 100%;
+    min-height: 36px;
+    height: 36px;
+     padding: 6px 12px 1px 6px;
+      border-color: #e6e6e6;
+    border-radius: 3px;
+     border: 1px solid #CCC;
+    background: #FFF;
+    overflow-y: auto;
+    max-width: 900px;
+    margin-bottom: 3px;
+    }
+ div.tagsinput span.tag {
+    padding: 2px 5px;
+    height: 22px;
+    line-height: 18px;
+    color: #fff;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 600;
+    background-color: #5c90d2;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    display: block;
+    float: left;
+    text-decoration: none;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+div.tagsinput span.tag a {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+}
+div.tagsinput span.tag a:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+div.tagsinput div {
+    display: block;
+    float: left;
+}
+div.tagsinput input {
+	 color: rgb(102, 102, 102);
+    width: 68px;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 21px;
+    width: 80px;
+    margin: 0 5px 5px 0;
+    font-family: helvetica;
+    font-size: 13px;
+    border: 1px solid transparent;
+    padding: 5px;
+    background: 0 0;
+  
+}
+.tags_clear {
+    clear: both;
+    width: 100%;
+    height: 0;
+}
+
+#attr  .header .label{
+	cursor: pointer;
+}
+
+#attr .header{
+	width: 100%; 
+	min-height: 36px;
+	height: 36px;"
+}
+.yj_table{
+	display: none;
+	margin-top:20px;
+}
+</style>
+<input type="hidden" value="{$value}" name="{$name}">
+<div id="attr">
+<div  class="header">
+		{volist name="data" id="v"}
+			<span  data-attr="{$v['id']}" class="label {if condition="isset($arr[$v['id']])"}label-success{else\}label-default{/if}">{$v['name']}</span>
+		{/volist}
+</div>
+<div class="content">
+{volist name="arr" key="key1" id="v"}
+<div class="tagsinput" data-attr="{$key1}" data-name="{:get_attr($key1)}">
+{volist name="v"  id="vv"}
+<span class="tag" data-name="{:get_attr($vv)}" data-attr="{$vv}">
+	<span>{:get_attr($vv)}</span><a href="#" title="Removing tag">x</a>
+</span>
+{/volist}
+<div id="keywords_addTag">
+<input class="keywords_tag" value="" data-attr="{$key1}" placeholder="{:get_attr($key1)}"  style="color: rgb(102, 102, 102); width: 68px;"></div>
+<div class="tags_clear"></div></div>
+{/volist}
+</div>
+
+<div class="yj_table"  {notempty name="value"}style="display:block;"{/notempty}>
+	<table class="table-bordered table">
+	<thead>
+		<tr><th>尺寸</th><th>价格</th><th>库存</th></tr>
+	</thead>
+<tbody>
+</tbody>
+</table>	
+</div>
+</div>
+<script>
+
+$('#attr').delegate('.keywords_tag','blur',function(){
+	var _this = $(this);
+	var val = _this.val();
+	var is_stop = 0;
+	_this.parent().parent().children('.tag').each(function(){
+			if($(this).children('span').html()==val){
+					is_stop = 1;
+					return false;
+			}
+})
+	
+if(is_stop){
+	return true;
+}
+	if(val.replace(/\s+/g,"")!==''){
+				_this.val('');
+				
+				$.post("{:url('addons/widget',array('widget'=>'add_attr'))}",{'id':_this.data('attr'),'name':val},function(data){
+								_this.parent().before('<span class="tag" data-name='+val+' data-attr='+data.data+'><span>'+val+'</span>'+
+								'<a href="#" title="Removing tag">x</a>'+
+								'</span>');		
+								create_table();
+				})
+				
+			
+	}else{
+				$(this).val('');
+	}
+	
+})
+
+$('#attr').delegate('.tag>a','click',function(){
+          $(this).parent().remove();
+          create_table();
+})
+$('#attr').children('.header').children('.label').click(function(){
+			var name=$(this).html();
+			var attr = $(this).data('attr');
+			if($(this).hasClass('label-default')){
+					$('#attr').children('.content').append('<div   class="tagsinput" data-name='+name+' data-attr='+attr+'>'+
+								'<div id="keywords_addTag">'+
+								'<input class="keywords_tag" value="" data-attr='+attr+' placeholder="添加'+name+'" style="color: rgb(102, 102, 102); width: 68px;" class=""></div>'+
+								'<div class="tags_clear"></div></div>'+
+								'</div>');	
+					$(this).addClass('label-success').removeClass('label-default');
+			}else{
+					if(confirm('是否删除')){
+							$(this).removeClass('label-success').addClass('label-default');
+							$('#attr').children('.content').children('.tagsinput').each(function(){
+										if($(this).data('attr')==attr){
+													$(this).remove();
+										}
+							});
+					};
+			}
+			
+})
+var attr_a = [],attr_all = [],attr_name=[];
+var price_yj = JSON.parse('<?php echo json_encode($price);?>');
+var sku_yj = JSON.parse('<?php echo json_encode($sku);?>');
+
+function create_table(){
+	
+		var name=[],i=0,attr=[],attr_all=[],attr_lists = [];
+		$('#attr').children('.content').children('.tagsinput').each(function(b){
+					var _this = $(this);
+					if(_this.find('.tag').length){
+							 name[i] = _this.data('name');
+						     attr[i] = [];
+							 _this.children('.tag').each(function(e){
+							 		 attr_lists.push(_this.data('attr')+':'+$(this).data('attr'));
+								   	 attr[i][e] = $(this).data('attr');
+									 attr_name[attr[i][e]] = $(this).data('name');
+							 })
+							 i++;
+				}
+		})
+		console.log(name,attr);
+		$("input[name={$name}]").val(attr_lists.join(','));
+		if(name.length){
+			$('.yj_table').show();
+			for(var a=0,len = attr.length;a<len;a++){
+						if(a==0){
+							for(var b=0,len1 = attr[a].length;b<len1;b++){
+										attr_all[b] = attr[a][b];	
+							}
+						}else{
+							attr_a = [];
+							attr_a = attr_all.slice(0);
+							attr_all=[];
+							console.log(attr_a);
+							for(var b=0,len1=attr_a.length;b<len1;b++){
+									for(var c=0,len2 = attr[a].length;c<len2;c++){
+										attr_all[b*(len2)+c] = [attr_a[b],attr[a][c]].join('-');
+									}
+							}
+				 	}
+			}
+			console.log(attr_name);
+			var header = '<tr>';
+			name.forEach(function(a){
+				header += '<th>'+a+'</th>';	
+			})
+			header +='<th>价格</th><th>库存</th></tr>';
+			$('.yj_table').find('thead').html(header);
+		//	$('.yj_table').find('tbody').html()
+			var nums = attr_all.length;
+			var body = '';
+		 	num=nums;
+		 	
+			for(var i=0,n=nums;i<n;i++){
+				nums=num;
+				body += '<tr>';
+					for(var b=0,len=name.length;b<len;b++){
+							nums /= attr[b].length;
+							i/attr[b].length;
+							if(i==0||(i%nums==0)){
+								//body += '<td rowspan='+nums+'>'+attr_name[attr[b][i==0?0:(i%attr[b].length)]]+'</td>';
+								body += '<td rowspan='+nums+'>'+attr_name[attr[b][i==0?0:(i%(nums*attr[b].length)/nums)]]+'</td>';
+							}
+				}
+				var my_sku = sku_yj.hasOwnProperty(attr_all[i])==true?sku_yj[attr_all[i]]:'';
+				var my_price = price_yj.hasOwnProperty(attr_all[i])==true?price_yj[attr_all[i]]:'';
+				
+				body +='<td><input type="text" name="price['+attr_all[i]+']" value="'+my_price+'"></td><td><input type="text" name="sku['+attr_all[i]+']" value="'+my_sku+'"></td>';
+				body +='</tr>';
+			}
+		
+			
+			
+			$('.yj_table').find('tbody').html(body);
+		}else{
+			 $('.yj_table').hide();
+		}
+		
+}
+create_table();
+</script>

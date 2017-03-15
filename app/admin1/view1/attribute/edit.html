@@ -1,0 +1,117 @@
+{extend name="base/index"}
+{block name="content"}
+	<script type="text/javascript" src="__PUBLIC__/public/jquery.dragsort.js"></script>
+	 <div class="main-title">
+		<h4>新增字段</h4>
+	 </div>
+	 <div class="bar">
+		<ul id="myTab" class="nav nav-tabs" role="tablist">
+      	<li role="presentation" class="active"><a href="#key1" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">基础</a></li>
+  	<li role="presentation" ><a href="#key2" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">基础</a></li>
+  
+    </ul>
+    <form action="{:url('update')}" class="yjshop" method="post">
+    <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="key1" aria-labelledby="home-tab">
+      
+		  <div class="form-group">
+		    <label>字段名称</label>
+		    <input type="text"  name="title" class="form-control w-250"  value="{$data['title']}"  placeholder="模型名称">
+		  </div>
+		  <div class="form-group">
+		    <label>字段标识</label>
+		    <input type="text" name="name" class="form-control w-250" value="{$data['name']}"   placeholder="模型标识">
+		  </div>
+		  <div class="form-group">
+		    <label>字段类型</label>
+				<select id="data-type" class="form-control w-250" name="type">
+				  <option value="">---请选择---</option>
+				 {volist name=":get_attribute_type()" id="v"}
+				 	<option rule="{$v[1]}" {eq name="data['type']" value="$key"}selected{/eq} value="{$key}">{$v[0]}</option>
+				 {/volist}
+				</select>
+		  </div>
+		  
+		  <div class="form-group">
+		    <label>字段定义</label>
+		    <input type="text" id="data-field"  name="field" class="form-control w-250" value="{$data['field']}"   placeholder="模型标识">
+		  </div>
+		  
+		    <div class="form-group">
+		    <label>参数</label>
+		       <textarea class="form-control w-250" name="extra" rows="3">{$data['extra']}</textarea>
+		  </div>
+		    <div class="form-group">
+		    <label>默认值</label>
+		    <input type="text" name="value" class="form-control w-250" value="{$data['value']}"   placeholder="模型标识">
+		  </div>
+		    <div class="form-group">
+		    <label>字段备注</label>
+		    <input type="text" name="remark" class="form-control w-250" value="{$data['remark']}"   placeholder="模型标识">
+		  </div>
+		    <div class="form-group">
+		    <label>是否显示</label>
+				 			<select name="is_show"  class="form-control w-250">
+								<option {eq name="data['is_show']" value='1'}selected{/eq} value="1">始终显示</option>
+								<option {eq name="data['is_show']" value='2'}selected{/eq} value="2">新增显示</option>
+								<option {eq name="data['is_show']" value='3'}selected{/eq} value="3">编辑显示</option>
+								<option {eq name="data['is_show']" value='4'}selected{/eq} value="0">不显示</option>
+							</select>
+		  </div>
+		    <div class="form-group w-250">
+		    <label>是否必填</label>
+				
+				<select name="is_must"  class="form-control">
+								<option {eq name="data['is_must']" value='0'}selected{/eq} value="0">否</option>
+								<option {eq name="data['is_must']" value='1'}selected{/eq} value="1">是</option>
+				</select>
+		  </div>
+		  
+      </div>
+      <div role="tabpanel" class="tab-pane fade in" id="key2" aria-labelledby="home-tab">
+		    <div class="form-group w-250">
+		    <label>验证规则</label>
+		    <input type="text" name="validate_rule" class="form-control" value="{$data['validate_rule']}"   placeholder="模型标识">
+		  </div>
+		    <div class="form-group w-250">
+		    <label>出错提示</label>
+		    <input type="text"  name="error_info" class="form-control" value="{$data['error_info']}"   placeholder="模型标识">
+		  </div>
+		  <div class="form-group w-250">
+		    <label>自动完成方式</label>
+			<select name="auto_type" class="form-control">
+								<option {eq name="data['auto_type']" value='function'}selected{/eq} value="function">函数</option>
+								<option {eq name="data['auto_type']" value='field'}selected{/eq} value="field">字段</option>
+								<option {eq name="data['auto_type']" value='string'}selected{/eq}  value="string">字符串</option>
+							</select>
+				
+		  </div>
+		 <div class="form-group w-250">
+			    <label>自动规则</label>
+			    <input type="text"  name="auto_rule" class="form-control" value="{$data['auto_rule']}"   placeholder="模型标识">
+		</div>
+		<div class="form-group w-250">
+		 				    <label>自动完成时间</label>
+							<select class="form-control" name="auto_time">
+								<option   {eq name="data['auto_time']" value='3'}selected{/eq} value="3">始 终</option>
+								<option {eq name="data['auto_time']" value='1'}selected{/eq} value="1">新 增</option>
+								<option {eq name="data['auto_time']" value='2'}selected{/eq} value="2">编 辑</option>
+							</select>
+		  </div>
+		  
+      </div>
+    </div>
+    <input type="hidden" name="model_id"  value="{$data['model_id']}" />
+    <input type="hidden" name="id"  value="{$data['id']}" />
+	<button type="submit" target-form="yjshop" class="btn ajax-post btn-default">Submit</button>
+   	</form>
+  </div>
+  
+{/block}
+{block name="script"}
+<script>
+$('#data-type').change(function(){
+		$('#data-field').val($(this).find('option:selected').attr('rule'));
+});
+</script>
+{/block}

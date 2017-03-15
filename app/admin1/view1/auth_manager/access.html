@@ -1,0 +1,85 @@
+{extend name="Base/index"}
+{block name="content"}
+
+	 <div class="main-title">
+		 <h4>编辑模型</h4>
+	 </div>
+	 <div class="bar">
+	<form action="{:url('access')}" method="post">
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+      <a href="#key1" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">访问授权</a></li>
+      <li role="presentation" class=""><a href="#key2" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">成员授权</a></li>
+     </ul>
+    <div id="myTabContent" class="tab-content">
+  	   <div role="tabpanel" class="tab-pane fade active in" id="key1" aria-labelledby="home-tab">
+  	   	  {volist name="lists" id="v"}
+  	   		  <dl class="checkmod">
+  	   			<dt class="hd">
+			   <div class="checkbox">
+			    <label>
+			      	<input type="checkbox" class="rules_all auth_rules" name="rules[]" value="{$v['id']}"> {$v['title']}
+			    </label>
+			   </div>	
+  	   		   </dt>
+  	   	   {if condition="isset($v['_child'])"}
+  	   		{volist name="v['_child']" id="vv"}
+  	   			<dd class="bd">
+  	   				<div class="rule_check">
+                       	<div>
+                     	<div class="checkbox">
+        <label>
+          <input type="checkbox" class="rules_row auth_rules" name="rules[]" value="{$vv['id']}">{$vv['title']}
+        </label>
+      </div>
+                       </div>
+                       {if condition="isset($vv['_child'])"}
+                       <span class="divsion">&nbsp;</span>
+                       <span class="child_row">
+                       		{volist name="vv['_child']" id="vvv"}
+									 <label class="checkbox-inline">
+									  <input type="checkbox"  class="auth_rules" name="rules[]" value="{$vvv['id']}">{$vvv['title']}
+									</label>
+							{/volist}
+							
+                        </span>
+                        	{/if}
+                    </div>
+  	   			</dd>
+  	   			{/volist}
+  	   			{/if}
+  	   		</dl>
+  	   		{/volist}
+       </div>
+       <div role="tabpanel" class="tab-pane fade" id="key2" aria-labelledby="profile-tab">
+       </div>
+    </div>
+    	<input type="hidden" name="id"  value="<?php echo input('id'); ?>"/>
+   	 	<button type="submit" class="btn btn-default">Submit</button>
+   	</form>
+  </div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+  //全选节点
+ 		
+    	 var rules =[{$rules}];
+        $('.auth_rules').each(function(){
+            if( $.inArray( parseInt(this.value,10),rules )>-1 ){
+                $(this).prop('checked',true);
+            }
+            if(this.value==''){
+                $(this).closest('span').remove();
+            }
+        });
+        
+        
+        $('.rules_all').on('change',function(){
+            $(this).closest('dl').find('dd').find('input').prop('checked',this.checked);
+        });
+        $('.rules_row').on('change',function(){
+            $(this).closest('.rule_check').find('.child_row').find('input').prop('checked',this.checked);
+        });
+        
+</script>
+{/block}

@@ -1,0 +1,22 @@
+{extend name="base/index"}
+{block name="content"}
+
+		<div class="main-title">
+           	<h4>用户组授权</h4>
+        </div>
+		<form action="{:url('group')}" class="yjshop" method="post">
+			<div class="main-content">
+			 <h5 class="item-label"><strong>{:tongyong('admin','username',$uid)}</strong> 所属的用户组列表</h5>
+			{volist name="group" id="v"}
+			<label class="radio-inline">
+				  <input type="radio" name="group" {$group_id==$v['id']?'checked':''} value="{$v['id']}"> {$v['title']}
+				</label>
+			{/volist}
+	     	 </div>
+	     	<div style="margin-top:20px;">
+	     	<input type="hidden" name="uid"  value="{$uid}" />
+			<button type="submit" target-form="yjshop" class="ajax-post btn btn-info">保存</button>
+		 	</div>
+		</form>
+		
+{/block}

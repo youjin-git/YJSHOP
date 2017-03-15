@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <title>YJSHOP</title>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap-theme.min.css" media="all">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/css/common.css" media="all">
+    
+    <script type="text/javascript" src="__PUBLIC__/public/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    {block name="style"}{/block}
+    <style>
+    </style>
+</head>
+<body>
+	
+    <!-- 头部 -->
+ <div class="header">
+        <!-- 主导航 -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">YJSHOP</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+      	  {volist name="__MENU__.main" id="menu"}
+                <li class="{$menu.class|default=''}"><a href="{$menu.url|url}">{$menu.title}</a></li>
+          {/volist}
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">修改密码</a></li>
+            <li><a href="#">退出</a></li>
+            <li class="divider"></li>
+            <li><a href="#">清除缓存</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</div>
+	
+  	<div class="left-wrapper ">
+
+	<nav class="nav navbar-inverse navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                	
+                	{volist name="__MENU__.child"  id="menu"}
+	                    <li >
+	                        <a href="#">
+	                       <span class="nav-label">{$key}</span>
+	                       <span class="glyphicon glyphicon-chevron-left pull-right"></span></a>
+		                        <ul class="nav nav-second-level collapse">
+		                        	{volist name="menu" id="v"}
+		                           		 <li><a href="{:url($v['url'])}">{$v['title']}</a></li>
+		                           	{/volist}
+		                        </ul>
+	                    </li>
+                 	{/volist}
+                </ul>
+
+            </div>
+        </nav>
+        </div>
+     <div class="right-wrapper">
+     	
+		{block name="content"}
+		<div class="main-title">
+		<h4>[{$model['title']|default=""}]列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="">新 增</a>
+			<a class="btn btn-info" href="">删 除</a>
+		</div>
+	<div class="main-content" style="margin-top:10px;">
+		<table class="table table-striped">
+      <thead>
+        <tr>
+          <th><input class="check-all" type="checkbox"></th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input class="ids" type="checkbox" value="150114" name="ids[]"></td>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+            <td><input class="ids" type="checkbox" value="150114" name="ids[]"></td>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+            <td><input class="ids" type="checkbox" value="150114" name="ids[]"></td>
+          <td>Larry</td>
+          <td>the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+   	 </table>
+		</div>
+		 {/block}
+	 </div>
+	 
+ 
+    {block name="script"}{/block}
+    <script>
+    	 var $window = $(window), $subnav = $("#subnav"), url;
+          $window.resize(function(){
+                $(".left-wrapper").css("min-height", $window.height());
+          }).resize();
+    	$('.left-wrapper').find(".metismenu").children('li').click(function(){
+    			if($(this).hasClass('active')){
+    					$(this).removeClass('active').children('ul').addClass('collapse');
+    			}else{
+    					$(this).addClass('active').children('ul').removeClass('collapse');
+    			}
+    	})
+    </script>
+</body>
+</html>

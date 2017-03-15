@@ -1,0 +1,140 @@
+{extend name="Base/index"}
+
+{block name="content"}
+	<div class="main-title">
+		<h4>[导航] 列表</h4>
+		</div>
+		<div class="bar">
+			<a class="btn btn-info" href="{:url('add')}">新 增</a>
+
+		</div>
+	<div class="main-content" style="margin-top:10px;">
+		<div class="category">
+			<div class="hd cf">
+				<div class="fold">折叠</div>
+				<div class="order">排序</div>
+				<div class="order">隐藏</div>
+				<div class="url">链接</div>
+				<div class="url">分组</div>
+				<div class="name">名称</div>
+			</div>
+			{volist name="data" id="v"}
+			<dl class="cate-item">
+				<dt class="cf">
+					<form action="/admin.php?s=/GoodCategory/edit.html" method="post">
+						<div class="opt-btn cf">
+							<a title="编辑" href="{:url('edit',array('id'=>$v['id']))}">编辑</a>
+							<a title="删除" href="{:url('delete',array('id'=>$v['id']))}"   class="confirm ajax-get">删除</a>
+						</div>
+						<div class="fold"><i class="icon-fold"></i></div>
+						<div class="order"><input type="text" name="sort" class="text input-mini" value="{$v['sort']}"></div>
+						<div class="order">{$v['hide']?'是':'否'}</div>
+						<div class="url">
+							{$v['url']}
+						</div>
+						<div class="url">
+							{$v['group']}
+						</div>
+						<div class="name">
+							<span class="tab-sign"></span>
+							<input type="hidden" name="id" value="1">
+							<input type="text" name="title" class="text" value="{$v['title']}">
+							<a class="add-sub-cate" title="添加子分类" href="{:url('add')}">
+								<i class="icon-add"></i>
+							</a>
+							<span class="help-inline msg"></span>
+						</div>
+					</form>
+				</dt>
+								<dd style="display: none;">
+								{if condition="isset($v['_child'])"}
+								{volist name="v['_child']" id="vv"}
+									<dl class="cate-item">
+									<dt class="cf">
+									<form action="/admin.php?s=/GoodCategory/edit.html" method="post">
+										<div class="opt-btn cf">
+												<a title="编辑" href="{:url('edit',array('id'=>$vv['id']))}">编辑</a>
+												<a title="删除" href="{:url('delete',array('id'=>$vv['id']))}"   class="confirm ajax-get">删除</a>
+										</div>
+										<div class="fold"><i class="icon-unfold"></i></div>
+										<div class="order"><input type="text" name="sort" class="text input-mini" value="{$vv['sort']}"></div>
+										<div class="order">{$vv['hide']?'是':'否'}</div>
+										<div class="url">
+								{$vv['url']}
+								</div>
+								<div class="url">
+								{$vv['group']}
+								</div>
+										<div class="name">
+											<span class="tab-sign"></span>
+											<input type="hidden" name="id" value="2">
+											<input type="text" name="title" class="text" value="{$vv['title']}">
+											<a class="add-sub-cate" title="添加子分类" href="/admin.php?s=/GoodCategory/add/pid/2.html">
+												<i class="icon-add"></i>
+											</a>
+											<span class="help-inline msg"></span>
+										</div>
+									</form>
+									</dt>
+												{if condition="isset($vv['_child'])"}
+												<dd>
+												
+												{volist name="vv['_child']" id="vvv"}
+													<dl class="cate-item">
+													<dt class="cf">
+													<form action="/admin.php?s=/GoodCategory/edit.html" method="post">
+														<div class="opt-btn cf">
+																<a title="编辑" href="{:url('edit',array('id'=>$vvv['id']))}">编辑</a>
+																<a title="删除" href="{:url('delete',array('id'=>$vvv['id']))}"   class="confirm ajax-get">删除</a>
+														</div>
+														<div class="fold"></div>
+														<div class="order"><input type="text" name="sort" class="text input-mini"  value="{$vvv['sort']}"></div>
+														<div class="order">{$vvv['hide']?'是':'否'}</div>
+														<div class="url">
+																{$vvv['url']}
+														</div>
+														<div class="url">
+																{$vvv['group']}
+														</div>
+														<div class="name">
+															<span class="tab-sign"></span>
+															<input type="hidden" name="id" value="2">
+															<input type="text" name="title" class="text" value="{$vvv['title']}">
+															<span class="help-inline msg"></span>
+														</div>
+													</form>
+													</dt>
+													</dl>
+													
+												{/volist}
+												</dd>
+												{/if}
+									</dl>
+									
+								{/volist}
+								</dd>
+									{/if}
+		</dl>
+		{/volist}
+		</div>
+		
+
+  
+</div>
+{/block}
+{block name="script"}
+<script>
+$(".category dd").prev().find(".fold i").click(function(){
+					var self = $(this);
+					if(self.hasClass("icon-unfold")){
+						self.closest("dt").next().slideUp("fast", function(){
+							self.removeClass("icon-unfold").addClass("icon-fold");
+						});
+					} else {
+						self.closest("dt").next().slideDown("fast", function(){
+							self.removeClass("icon-fold").addClass("icon-unfold");
+						});
+					}
+				});
+</script>
+{/block}

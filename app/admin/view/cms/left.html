@@ -1,0 +1,18 @@
+
+<div class="left-wrapper ">
+            <div class="sidebar-collapse">
+                <ul  id="side-menu">
+                	{volist name="goods_class"  key="key" id="menu"}
+	                    <li >
+	                 	  <span class="nav-label"><i class="iconfont"></i>{$key}</span>
+	                    
+			                <ul class="nav" {neq name="key" value="$current"}style="display:none"{/neq}> 
+					              {volist name="menu" id="v"}
+									<li {eq name="id" value="$v['id']"}class="current"{/eq}><a  href="{:url('lists',array('nav_id'=>$v['id']))}">{$v['name']}</a></li>
+					             {/volist}
+		                    </ul>
+		                </li>
+                 	{/volist}
+                </ul>
+            </div>
+ </div>
