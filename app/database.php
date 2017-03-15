@@ -13,15 +13,15 @@ return [
     // 数据库类型
     'type'           => 'mysql',
     // 服务器地址
-    'hostname'       => 'localhost',
+    'hostname'       => '127.0.0.1',
     // 数据库名
-    'database'       => 'zwc4228986',
+    'database'       => 'yjshop',
     // 用户名
-    'username'       => 'zwc4228986',
+    'username'       => 'admin',
     // 密码
-    'password'       => 'z9r6h3g5',
+    'password'       => '3f29cab7',
     // 端口
-    'hostport'       => '',
+    'hostport'       => '3307',
     // 连接dsn
     'dsn'            => '',
     // 数据库连接参数
