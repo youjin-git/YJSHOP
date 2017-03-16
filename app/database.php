@@ -17,11 +17,11 @@ return [
     // 数据库名
     'database'       => 'yjshop',
     // 用户名
-    'username'       => 'admin',
+    'username'       => 'root',
     // 密码
-    'password'       => '3f29cab7',
+    'password'       => 'root',
     // 端口
-    'hostport'       => '3307',
+    'hostport'       => '',
     // 连接dsn
     'dsn'            => '',
     // 数据库连接参数

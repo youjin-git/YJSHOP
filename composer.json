@@ -26,4 +26,9 @@
     "config": {
         "preferred-install": "dist"
     }
+	"autoload": {
+        "psr-4": {
+            "think\\composer\\": "src"
+        }
+    },
 }

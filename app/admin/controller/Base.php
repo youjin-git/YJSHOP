@@ -9,11 +9,11 @@ class Base extends controller
 	public function login(Request $request){
 			if($request::instance()->isPost()){
 			    //检测验证码
-			    $captcha = new \think\captcha\Captcha();
-			    $verify = input('post.verify');
-			    if (!$captcha->check($verify)) {
-           				 $this->error('验证码错误');
-      			}
+			    // $captcha = new \think\captcha\Captcha();
+			    // $verify = input('post.verify');
+			    // if (!$captcha->check($verify)) {
+           				 // $this->error('验证码错误');
+      			// }
 			    $Member = new Member;
  			    $data['username'] = input('post.username');
 			    $data['password'] = input('post.password');
