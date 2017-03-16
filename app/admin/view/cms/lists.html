@@ -2,12 +2,23 @@
 {block name="left"}
 	{:action('Cms/left',[input('nav_id')],'widget')}
 {/block}
+
 {block name="content"}
         <div class="main-title">
-            <h4>[{$data['name']}] 列表</h4>
+            <h4>[{$data['name']}] 列表
+	        {if condition="isset($search_list)"}
+	        	【 {if condition="Request()->has($model['search_list'])&&$search=Request()->param($model['search_list'])"}<a href="{:url('lists')}">全部</a>{else/}全部{/if}
+	        	{volist name="search_list"  id="v"}
+	        	{if condition="isset($search)&&$search==$key"}
+	        	{$v}
+	        	{else\}
+	        	<a href="{:url('lists',array($model['search_list']=>$key))}">{$v}</a>
+	        	{/if}{/volist}】
+	        {/if}
+	        </h4>
         </div>
         <div class="bar">
-            <a class="btn btn-info" href="{:url('add',['nav_id'=>input('nav_id')])}">新 增</a>
+            <a class="btn btn-info" href="{:url('add',['nav_id'=>$data['id']])}">新 增</a>
             <a class="btn btn-info ajax-post confirm"  target-form="ids"  href="{:url('delete')}">删 除</a>
               <div id="search" style="float: right;">
 			  <form class="form-inline" role="form" method="get">
@@ -21,6 +32,7 @@
 						    </div>
 						  </div>
 					{/case}
+					{case value='date'}
 					{case value='datetime'}
 					<div class="btn-group">
 					  <div   class="time">
@@ -36,16 +48,15 @@
 					 </div>
 					</div>
 					{/case}
+					{/case}
 					{case value='select'}
 							<div class="form-group">
 								   <div class="input-group">
 								      <div class="input-group-addon">{$v['name']}</div>
 								      <select name="{$v['key']}" class="form-control">
 								      	<option value="">全部</option>
-								      	
 								      	{volist name=":parse_field_attr($v['extra'])"   id="vv"}
-								      		 <?php p($key);p(Request()->get($v['key']));  ?>
-								      		<option {if condition="Request()->has($v['key'])&& (string)$key === Request()->get($v['key'])"}selected{/if}  name="key"  value="{$key}">{$vv}</option>
+								      	<option  {if condition="Request()->has($v['key'])&& $key == Request()->get($v['key'])"}selected{/if}  name="key"  value="{$key}">{$vv}</option>
 								      	{/volist}
 								      </select>
 								   </div>
@@ -53,22 +64,24 @@
 					{/case}
 				  {/switch}
 			  {/volist}
-			  <button type="submit" class="search_btn btn btn-default">搜索</button>
+			    {notempty name="search_key"}
+				  <button type="submit" class="search_btn btn btn-default">搜索</button>
+			  {/notempty}
 			</form>
             </div>
         </div>
+        
         <div class="main-content" style="margin-top:10px;">
             <table class="table table-striped">
             <thead>
                 <tr>
                   <th><input class="check-all" type="checkbox"></th>
                     {volist name="list_grids" id="field"}
-                    	     <th>{$field['title']}</th>
+                            <th>{$field['title']}</th>
                     {/volist}
                 </tr>
           </thead>
           <tbody>
-       
             {volist name="lists" id="v"}
                  <tr>
                     <td><input class="ids" type="checkbox" value="{$v[$model['need_pk']]}" name="ids[]"></td>  

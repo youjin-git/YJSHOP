@@ -5,20 +5,18 @@
 {block name="content"}
 	<div class="main-title">
 		<h4>[{$model['title']}] 添加</h4>
-		</div>
+	</div>
 <div class="bar">
-	
-	<form action="{:url('base_update')}" class="yjshop"  method="post">
+	<form action="{:url('update')}" class="yjshop"  method="post">
     <ul id="myTab" class="nav nav-tabs" role="tablist">
     	{volist name=":parse_config_attr($model['field_group'])" id="group"}
     		<li role="presentation"  {eq name="key" value='1'}class="active"{/eq}><a href="#key{$key}" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">{$group}</a></li>
     	{/volist}
-    	</ul>
+   </ul>
     <div id="myTabContent" class="tab-content">
     	{volist name=":parse_config_attr($model['field_group'])" id="group"}
       <div role="tabpanel" class="tab-pane  {eq name="key" value='1'}active{/eq}"   id="key{$key}" aria-labelledby="home-tab">
       	{volist name="fields[$key]" id="field"}
-      			
       				{if condition="$field['is_show']==1 || $field['is_show']==2"}
       					{switch name="field.type"}
       						{case value="num"}
@@ -93,7 +91,6 @@
 								</div>
 						    {/case}
 						    {case value="datetime"}
-						    	
 							     <div class="form-group">
 								    <label>{$field['title']}</label>
 										<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap-datetimepicker.min.css" media="all">
@@ -103,6 +100,7 @@
 										 	$("#datetimepicker_{$field['name']}").datetimepicker();
 										</script>
 								</div>
+									
 						    {/case}
 						     {case value="date"}
 							      <div class="form-group">
@@ -119,7 +117,6 @@
 						    {case value="widget"}
 							      	<div class="form-group">
 									 	  <label>{$field['title']}</label>
-										
 									 	 {:action('yjshop/'.$field['extra'],['name'=>$field['name'],'value'=>''],'widget')}
 									</div>
 						    {/case}
@@ -129,7 +126,7 @@
       </div>
    	  {/volist}
     </div>
-    	 <input type="hidden" name="nav_id" value="{:input('nav_id')}">
+		 <input type="hidden" name="nav_id" value="{:input('nav_id')}">
   		 <button type="submit" target-form="yjshop"  class="ajax-post  btn  btn-default">Submit</button>
    	</form>
   </div>

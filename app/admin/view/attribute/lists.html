@@ -45,6 +45,7 @@
 {block name="script"}
 <script>
 $('.main-content').find('input').change(function(){
+						if($(this).attr('name')!=='ids[]'&&$(this).attr('class')!=='check-all')
 						$.post("{:url('change_info')}",{'id':$(this).data('id'),'field':$(this).attr('name'),'value':$(this).val()},function(data){
 										if(data.code){
 												updateAlert(data.msg,'success',data.url);	

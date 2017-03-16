@@ -89,7 +89,6 @@ sql;
                 DELAY_KEY_WRITE=0
                 ;
 sql;
-
             }else{
                 $sql = <<<sql
                 CREATE TABLE IF NOT EXISTS `{$this->table_name}` (

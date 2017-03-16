@@ -1,11 +1,9 @@
 {extend name="base/index"}
 {block name="content"}
-	<div class="main-title">
-		<h4>[{$model['title']}] 添加</h4>
-		</div>
-<div class="bar">
+	
+	 <div class="bar">
 	<form action="{:url('update')}" class="yjshop"  method="post">
-    <ul id="myTab" class="nav nav-tabs" role="tablist">
+    	<ul id="myTab" class="nav nav-tabs" role="tablist">
     	{volist name=":parse_config_attr($model['field_group'])" id="group"}
     		<li role="presentation"  {eq name="key" value='1'}class="active"{/eq}><a href="#key{$key}" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">{$group}</a></li>
     	{/volist}
@@ -19,7 +17,7 @@
       						{case value="num"}
 					      		<div class="form-group">
 							    <label>{$field['title']}</label>
-							    <input type="text" name="{$field['name']}" class="form-control w-250" value="" placeholder="{$field['title']}">
+							    <input type="text" name="{$field['name']}" class="form-control w-200" value="" placeholder="{$field['title']}">
 							    </div>
 						    {/case}
 						   	{case value="string"}
@@ -46,14 +44,7 @@
 									</div>			
 						    </div>
 						    {/case}
-						    
 						    {case value="picture"}
-						    	 <div class="form-group">
-							   	 	<label>{$field['title']}</label>
-									{:hook('UploadImage',array('name'=>$field['name'],'value'=>''))}
-								</div>
-						    {/case}
-						    {case value="pictures"}
 						     <div class="form-group">
 							    <label>{$field['title']}</label>
 								{:hook('UploadImages',array('name'=>$field['name'],'value'=>''))}
@@ -81,6 +72,7 @@
 									</select>
 							  </div>
 						    {/case}
+						    
 						    {case value="editor"}
 						     <div class="form-group">
 							    <label>{$field['title']}</label>
@@ -92,23 +84,23 @@
 								    <label>{$field['title']}</label>
 										<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap-datetimepicker.min.css" media="all">
 										<script type="text/javascript" src="__PUBLIC__/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
-										<input type="text" class="form-control w-250" name="{$field['name']}"  id="datetimepicker_{$field['name']}" value="" readonly>
-										<script>
-										 	$("#datetimepicker_{$field['name']}").datetimepicker();
-										</script>
+								<input type="text" class="form-control w-250" name="{$field['name']}"  id="datetimepicker_{$field['name']}" value="" readonly>
+								
+									<script>
+										$("#datetimepicker_{$field['name']}").datetimepicker();
+									</script>
 								</div>
-									
 						    {/case}
 						     {case value="date"}
 							      <div class="form-group">
 								    <label>{$field['title']}</label>
 								<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap-datetimepicker.min.css" media="all">
 								<script type="text/javascript" src="__PUBLIC__/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
-								
 								  <input type="text" class="form-control w-250" name="{$field['name']}"  id="datetimepicker_{$field['name']}" value="" readonly>
 									<script>
-									   	 $("#datetimepicker_{$field['name']}").datetimepicker();
+										$("#datetimepicker_{$field['name']}").datetimepicker();
 									</script>
+									
 								</div>
 						    {/case}
 						    {case value="widget"}
@@ -123,7 +115,7 @@
       </div>
    	  {/volist}
     </div>
-  		 <button type="submit" target-form="yjshop"  class="ajax-post  btn  btn-default">Submit</button>
+  		 <button type="submit" target-form="yjshop"  class="ajax-post  btn btn-default">Submit</button>
    	</form>
   </div>
 {/block}

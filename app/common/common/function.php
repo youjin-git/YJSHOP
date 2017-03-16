@@ -28,6 +28,8 @@ function get_model_attribute($model_id, $group = true,$fields=true){
         $info = db('Attribute')->where($map)->field($fields)->select();
         $list[$model_id] = $info;
     }
+   
+    
     $attr = array();
     if($group){
         foreach ($list[$model_id] as $value) {
@@ -58,6 +60,8 @@ function get_model_attribute($model_id, $group = true,$fields=true){
                 $group[$keys[0]] = array_merge($group[$keys[0]], $attr);
        	 }
         }
+        
+        
         if (!empty($model['attribute_alias'])) {
             $alias  = preg_split('/[;\r\n]+/s', $model['attribute_alias']);
             $fields = array();
@@ -79,9 +83,10 @@ function get_model_attribute($model_id, $group = true,$fields=true){
             $attr[$value['name']] = $value;
         }
     }
+   
     return $attr;
 }
-function list_sort_by($list,$field, $sortby='asc'){
+function list_sort_by($list,$field, $sortby='asc') {
    if(is_array($list)){
        $refer = $resultSet = array();
        foreach ($list as $i => $data)
@@ -103,58 +108,45 @@ function list_sort_by($list,$field, $sortby='asc'){
    }
    return false;
 }
-function get_list_field($data, $grid,$pk='id'){
-	foreach($grid['field'] as $field){
-			$array  =    explode('|',$field);
-			if(isset($array[1])){
-		        	if(strpos($array[1],'/')){
-		        		 $function = explode('/',$array[1]);
-		        		$data[$array[0]] = call_user_func($function[0],$function[1],$function[2],$data[$array[0]]);
-		        	}else{
-		        		$data[$array[0]] = call_user_func($array[1], $data[$array[0]]);
-		        	}
-			}
-		 	$temp[$field] = $data[$array[0]];
-	}
 
+
+
+function get_list_field($data, $grid,$pk='id'){
     // 获取当前字段数据
+    foreach($grid['field'] as $field){
+        $array  =   explode('|',$field);
+        $temp  =    $data[$array[0]];
+        // 函数支持
+        if(isset($array[1])){
+        	if(strpos($array[1],'/')){
+        		 $function = explode('/',$array[1]);
+        		 $temp = call_user_func($function[0],$function[1],$function[2],$temp);
+        	}else{
+        		 $temp = call_user_func($array[1], $temp);
+        	}
+        }
+        $data2[$array[0]]    =   $temp;
+	}
 if(!empty($grid['format'])){
-	     $value  =   preg_replace_callback('/\[([a-z_]+)\]/', function($match) use($temp){
-	        	switch($match[1]){
-					case 'picture':
-						  $a ='<img width="50px" src="__ROOT__'. current($temp).'">';
-					break;
-					default:
-					$a = yj_style($match[1], $temp);
-					//$a = $temp[$match[1]];
-					break;
-	        	}
-	        	return $a;
-				}, $grid['format']);
+        $value  =   preg_replace_callback('/\[([a-z_]+)\]/', function($match) use($temp){
+        	switch($match[1]){
+				case 'picture';
+				$a ='<img width="50px" src="__ROOT__'.$temp.'">';
+				break;
+        	}
+        	return $a;
+			}, $grid['format']);
+			
  }else{
-		foreach($grid['field'] as $field){
-		        $array  =    explode('|',$field);
-		        $temp   =    $data[$array[0]];
-		        // 函数支持
-		        if(isset($array[1])){
-		        	if(strpos($array[1],'/')){
-		        		 $function = explode('/',$array[1]);
-		        		 $temp = call_user_func($function[0],$function[1],$function[2],$temp);
-		        	}else{
-		        		 $temp = call_user_func($array[1], $temp);
-		        	}
-				}
-				$data2[$array[0]]    =   $temp;
-		}
-		$value = implode(' ',$data2);
+      $value = implode(' ',$data2);
 }
- 
 if(!empty($grid['href'])){
         $links  =   explode(',',$grid['href']);
         foreach($links as $link){
             $array  =   explode('|',$link);
             $href   =   $array[0];
             $show   =   isset($array[1])?$array[1]:$value;
+			
                 // 替换系统特殊字符串
             $href   =   str_replace(
                     array('[DELETE]','[EDIT]','[LIST]'),
@@ -170,21 +162,13 @@ if(!empty($grid['href'])){
     }
     return $value;
 }
-function yj_style($case,$data){
-		switch($case){
-			default:
-			$value = $data[$case];
-			$break;
-		}
-		return $value;
-}
 function get_table_name($model_id = null){
-		if(empty($model_id)){
-        		return false;
-    	}
+
+    if(empty($model_id)){
+        return false;
+    }
     return  db('model')->where('id',$model_id)->value('name');
 }
-
 function is_login(){
 	 $user = session('admin_user');
 	 if(empty($user)){
@@ -192,6 +176,7 @@ function is_login(){
 	 }else{
 	 	 return $user['uid'];
 	 }
+	
 }
 
 function get_client_ip($type = 0,$adv=false) {

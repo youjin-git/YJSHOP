@@ -1,14 +1,19 @@
 {extend name="base/index"}
+{block name="left"}
+{:action('cms/left',[input('nav_id')],'widget')}
+{/block}
 {block name="content"}
-	
+		<div class="main-title">
+		<h4>[{$model['title']}] 编辑</h4>
+		</div>
 
 	 <div class="bar">
 	<form action="{:url('update')}" class="yjshop" method="post">
-    	<ul id="myTab" class="nav nav-tabs" role="tablist">
-    	{volist name=":parse_config_attr($model['field_group'])" id="group"}
-    		<li role="presentation"  {eq name="key" value='1'}class="active"{/eq}><a href="#key{$key}" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">{$group}</a></li>
-    	{/volist}
-    	</ul>
+	  <ul id="myTab" class="nav nav-tabs" role="tablist">
+	    	{volist name=":parse_config_attr($model['field_group'])" id="group"}
+	    		<li role="presentation"  {eq name="key" value='1'}class="active"{/eq}><a href="#key{$key}" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">{$group}</a></li>
+	    	{/volist}
+	 	</ul>
     <div id="myTabContent" class="tab-content">
     	{volist name=":parse_config_attr($model['field_group'])" id="group"}
       <div role="tabpanel" class="tab-pane  {eq name="key" value='1'}active{/eq}"   id="key{$key}" aria-labelledby="home-tab">
@@ -19,13 +24,13 @@
       						{case value="num"}
 					      		<div class="form-group">
 							    <label>{$field['title']}</label>
-							    <input type="text" name="{$field['name']}" class="form-control w-200" value="{$data[$field['name']]}" placeholder="模型名称">
+							    <input type="text" name="{$field['name']}" class="form-control w-200" value="{$data[$field['name']]}" placeholder="{$field['title']}">
 							    </div>
 						    {/case}
 						   	{case value="string"}
 					      		<div class="form-group">
 							   	 <label>{$field['title']}</label>
-							    	<input type="text" name="{$field['name']}" class="form-control w-250" value="{$data[$field['name']]}" placeholder="模型名称">
+							    	<input type="text" name="{$field['name']}" class="form-control w-250" value="{$data[$field['name']]}" placeholder="{$field['title']}">
 							    </div>
 						    {/case}
 						    {case value="textarea"}
@@ -47,6 +52,12 @@
 						    </div>
 						    {/case}
 						    {case value="picture"}
+						     <div class="form-group">
+							    <label>{$field['title']}</label>
+								{:hook('UploadImage',array('name'=>$field['name'],'value'=>$data[$field['name']]))}
+								</div>
+						    {/case}
+						      {case value="pictures"}
 						     <div class="form-group">
 							    <label>{$field['title']}</label>
 								{:hook('UploadImages',array('name'=>$field['name'],'value'=>$data[$field['name']]))}
@@ -103,9 +114,9 @@
 									<script>
 									   $("#datetimepicker_{$field['name']}").datetimepicker();
 									</script>
-								</div>	
+								</div>
 						    {/case}
-						     {case value="widget"}
+						    {case value="widget"}
 							      	<div class="form-group">
 									<label>{$field['title']}</label>
 									{:action('yjshop/'.$field['extra'],['name'=>$field['name'],'value'=>$data],'widget')}

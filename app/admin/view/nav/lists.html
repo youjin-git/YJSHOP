@@ -1,17 +1,8 @@
 {extend name="base/index"}
 {block name="content"}
+ 
         <div class="main-title">
-            <h4>[{$model['title']}] 列表
-	        {if condition="isset($search_list)"}
-	        	【 {if condition="Request()->has($model['search_list'])&&$search=Request()->param($model['search_list'])"}<a href="{:url('lists')}">全部</a>{else/}全部{/if}
-	        	{volist name="search_list"  id="v"}
-	        	{if condition="isset($search)&&$search==$key"}
-	        	{$v}
-	        	{else\}
-	        	<a href="{:url('lists',array($model['search_list']=>$key))}">{$v}</a>
-	        	{/if}{/volist}】
-	        {/if}
-	        </h4>
+            <h4>[{$model['title']}] 列表</h4>
         </div>
         <div class="bar">
             <a class="btn btn-info" href="{:url('add')}">新 增</a>
@@ -28,7 +19,6 @@
 						    </div>
 						  </div>
 					{/case}
-					{case value='date'}
 					{case value='datetime'}
 					<div class="btn-group">
 					  <div   class="time">
@@ -43,7 +33,6 @@
 						</script>
 					 </div>
 					</div>
-					{/case}
 					{/case}
 					{case value='select'}
 							<div class="form-group">
@@ -60,9 +49,7 @@
 					{/case}
 				  {/switch}
 			  {/volist}
-			    {notempty name="search_key"}
-				  <button type="submit" class="search_btn btn btn-default">搜索</button>
-			  {/notempty}
+			  <button type="submit" class="search_btn btn btn-default">搜索</button>
 			</form>
             </div>
         </div>
