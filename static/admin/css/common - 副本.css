@@ -1,0 +1,111 @@
+body{
+background: #f6f6f6;
+padding: 50px 0 0 200px;
+font: 14px/1.5 "microsoft yahei", Helvetica, Tahoma, Arial, sans-serif;
+}
+.navbar{
+	margin-bottom: 0px; 
+	border-radius:0px;
+}
+
+.header .navbar-nav>li>a{
+    font-size: 16px;
+    color: #FFF;
+    font-weight: bold;
+}
+.header .navbar-brand{
+	width: 200px;
+    text-align: center;
+    color: #FFF;
+    font-weight: bold;
+   font-size: 27px;
+}
+.header .current{
+	background: #000000;
+}
+.glyphicon-chevron-left{
+	font-size: 12px;
+	top:3px;
+}
+
+.left-wrapper {
+	position: fixed;
+    left: 0;
+    top: 50px;
+    background: url("../images/bg.png") repeat #6b6b6b;
+}
+.right-wrapper{
+	 padding:20px ;
+	
+}
+
+.main-title {
+    margin-top: -8px;
+    padding-bottom: 20px;
+}
+@media (max-width: 767px) {
+		
+}
+@media (min-width: 767px) {
+.left-wrapper  .nav{
+	  width: 200px;
+}
+}
+.page{
+	overflow: hidden;
+}
+.pagination{
+	float: right;
+}
+#myTabContent>div{
+	    padding: 15px 4px;
+}
+.w-200{
+	max-width: 200px;
+}
+.w-250{
+	max-width: 250px;
+}
+.w-300{
+	max-width: 300px;
+}
+.w-400{
+	max-width: 400px;
+}
+.needdragsort li{
+	overflow: hidden;
+}
+#side-menu{
+	padding: 0px;
+}
+#side-menu a{
+	color:white;
+}
+#side-menu .nav li:hover a{
+	color: #000000;
+}
+#side-menu .current{
+	background: white;
+}
+#side-menu .nav-label{
+	padding-left: 2px;
+	color: #fcf8e3;
+	width:200px;
+	height: 50px;
+	line-height: 50px;
+	border-left:3px solid #3071A9;
+	display: block;
+	
+}
+#side-menu .current a{
+	color:#000000;
+}
+
+.alert{
+	display: none;
+	position: fixed;
+    top: 61px;
+    z-index: 999;
+    left: 215px;
+    width: 80%;
+}
