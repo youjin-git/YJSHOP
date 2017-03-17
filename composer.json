@@ -26,5 +26,11 @@
     "config": {
         "preferred-install": "dist"
     }
-	
+	"scripts":{
+		"composer install": [
+			"vendor/topthink/think-captcha",
+			"thinkphp"
+		]
+	}
+
 }
