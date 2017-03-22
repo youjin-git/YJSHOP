@@ -107,7 +107,7 @@ $('.ajax-post').click(function(){
 				   setTimeout(function(){
                     	_this.removeClass('disabled').prop('disabled',false);
                        
-                        if (data.url=='javascript:history.back(-1);'||data.url==undefined) {
+                        if (data.url=='javascript:history.back(-1);'||data.url=='') {
                           	 $('.alert').find('button').click();
                         }else{
                             location.href=data.url;
@@ -126,6 +126,7 @@ var top_alert = $('.alert');
 		// content.animate({paddingTop:'-=55'},200);
 	});
 window.updateAlert = function (msg,status,url,time) {
+	
   		msg = msg ||'yjshop';
   		if(url)msg=msg+' 页面即将自动跳转 ~';
   		top_alert.find('strong').text(msg);
@@ -134,6 +135,7 @@ window.updateAlert = function (msg,status,url,time) {
   		top_alert.removeClass('alert-error alert-warn alert-info alert-success').addClass('alert-'+status);
   		top_alert.addClass('block').slideDown(200);
 		setTimeout(function(){
+				
 				if(url)location.href=url;
 				top_alert.removeClass('block').slideUp(200);
 		},time)
