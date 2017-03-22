@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -11,19 +11,9 @@
 
 namespace think;
 
-use think\Config;
-use think\Env;
-use think\Exception;
 use think\exception\HttpException;
 use think\exception\HttpResponseException;
 use think\exception\RouteNotFoundException;
-use think\Hook;
-use think\Lang;
-use think\Loader;
-use think\Log;
-use think\Request;
-use think\Response;
-use think\Route;
 
 /**
  * App 应用管理
@@ -78,12 +68,10 @@ class App
      */
     public static function run(Request $request = null)
     {
-
-	
         is_null($request) && $request = Request::instance();
+
         try {
             $config = self::initCommon();
-         
             if (defined('BIND_MODULE')) {
                 // 模块/控制器绑定
                 BIND_MODULE && Route::bind(BIND_MODULE);
@@ -94,7 +82,7 @@ class App
                     Route::bind($name);
                 }
             }
-            
+
             $request->filter($config['default_filter']);
 
             if ($config['lang_switch_on']) {
@@ -126,9 +114,11 @@ class App
                 Log::record('[ HEADER ] ' . var_export($request->header(), true), 'info');
                 Log::record('[ PARAM ] ' . var_export($request->param(), true), 'info');
             }
-			  
+
             // 监听app_begin
             Hook::listen('app_begin', $dispatch);
+            // 请求缓存检查
+            $request->cache($config['request_cache'], $config['request_cache_expire'], $config['request_cache_except']);
 
             switch ($dispatch['type']) {
                 case 'redirect':
@@ -137,17 +127,17 @@ class App
                     break;
                 case 'module':
                     // 模块/控制器/操作
-       
                     $data = self::module($dispatch['module'], $config, isset($dispatch['convert']) ? $dispatch['convert'] : null);
-                 
                     break;
                 case 'controller':
                     // 执行控制器操作
-                    $data = Loader::action($dispatch['controller']);
+                    $vars = array_merge(Request::instance()->param(), $dispatch['var']);
+                    $data = Loader::action($dispatch['controller'], $vars, $config['url_controller_layer'], $config['controller_suffix']);
                     break;
                 case 'method':
                     // 执行回调方法
-                    $data = self::invokeMethod($dispatch['method']);
+                    $vars = array_merge(Request::instance()->param(), $dispatch['var']);
+                    $data = self::invokeMethod($dispatch['method'], $vars);
                     break;
                 case 'function':
                     // 执行闭包
@@ -162,7 +152,7 @@ class App
         } catch (HttpResponseException $exception) {
             $data = $exception->getResponse();
         }
-		
+
         // 清空类的实例化
         Loader::clearInstance();
 
@@ -177,10 +167,10 @@ class App
         } else {
             $response = Response::create();
         }
-	
+
         // 监听app_end
         Hook::listen('app_end', $response);
-	
+
         return $response;
     }
 
@@ -221,16 +211,15 @@ class App
      */
     public static function invokeMethod($method, $vars = [])
     {
-    	
         if (is_array($method)) {
-            $class   = is_object($method[0]) ? $method[0] : new $method[0](Request::instance());
+            $class   = is_object($method[0]) ? $method[0] : self::invokeClass($method[0]);
             $reflect = new \ReflectionMethod($class, $method[1]);
         } else {
             // 静态方法
             $reflect = new \ReflectionMethod($method);
         }
         $args = self::bindParams($reflect, $vars);
-	
+
         self::$debug && Log::record('[ RUN ] ' . $reflect->class . '->' . $reflect->name . '[ ' . $reflect->getFileName() . ' ]', 'info');
         return $reflect->invokeArgs(isset($class) ? $class : null, $args);
     }
@@ -244,18 +233,13 @@ class App
      */
     public static function invokeClass($class, $vars = [])
     {
-    	
-    	
         $reflect     = new \ReflectionClass($class);
         $constructor = $reflect->getConstructor();
-       
         if ($constructor) {
             $args = self::bindParams($constructor, $vars);
-        
         } else {
             $args = [];
         }
-   
         return $reflect->newInstanceArgs($args);
     }
 
@@ -263,7 +247,7 @@ class App
      * 绑定参数
      * @access public
      * @param \ReflectionMethod|\ReflectionFunction $reflect 反射类
-     * @param array             $vars    变量
+     * @param array                                 $vars    变量
      * @return array
      */
     private static function bindParams($reflect, $vars = [])
@@ -310,8 +294,6 @@ class App
                     throw new \InvalidArgumentException('method param miss:' . $name);
                 }
             }
-            // 全局过滤
-            array_walk_recursive($args, [Request::instance(), 'filterExp']);
         }
         return $args;
     }
@@ -326,12 +308,10 @@ class App
      */
     public static function module($result, $config, $convert = null)
     {
-    	
         if (is_string($result)) {
             $result = explode('/', $result);
         }
         $request = Request::instance();
-   
         if ($config['app_multi_module']) {
             // 多模块部署
             $module    = strip_tags(strtolower($result[0] ?: $config['default_module']));
@@ -355,6 +335,8 @@ class App
                 // 初始化模块
                 $request->module($module);
                 $config = self::init($module);
+                // 模块请求缓存检查
+                $request->cache($config['request_cache'], $config['request_cache_expire'], $config['request_cache_except']);
             } else {
                 throw new HttpException(404, 'module not exists:' . $module);
             }
@@ -381,34 +363,30 @@ class App
 
         // 监听module_init
         Hook::listen('module_init', $request);
-		
+
         $instance = Loader::controller($controller, $config['url_controller_layer'], $config['controller_suffix'], $config['empty_controller']);
-     
         if (is_null($instance)) {
             throw new HttpException(404, 'controller not exists:' . Loader::parseName($controller, 1));
         }
-          
-	
         // 获取当前操作名
         $action = $actionName . $config['action_suffix'];
-		
+
+        $vars = [];
         if (is_callable([$instance, $action])) {
             // 执行操作方法
             $call = [$instance, $action];
         } elseif (is_callable([$instance, '_empty'])) {
             // 空操作
             $call = [$instance, '_empty'];
+            $vars = [$actionName];
         } else {
             // 操作不存在
             throw new HttpException(404, 'method not exists:' . get_class($instance) . '->' . $action . '()');
         }
-        
 
         Hook::listen('action_begin', $call);
-	
-        $data = self::invokeMethod($call);
-			
-        return $data;
+
+        return self::invokeMethod($call, $vars);
     }
 
     /**
@@ -438,13 +416,11 @@ class App
 
             // 注册应用命名空间
             self::$namespace = $config['app_namespace'];
-		
             Loader::addNamespace($config['app_namespace'], APP_PATH);
-			
-			if (!empty($config['root_namespace'])) {
+            if (!empty($config['root_namespace'])) {
                 Loader::addNamespace($config['root_namespace']);
             }
-		
+
             // 加载额外文件
             if (!empty($config['extra_file_list'])) {
                 foreach ($config['extra_file_list'] as $file) {
@@ -461,10 +437,10 @@ class App
 
             // 监听app_init
             Hook::listen('app_init');
-			
-            self::$init = $config;
+
+            self::$init = true;
         }
-        return self::$init;
+        return Config::get();
     }
 
     /**

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -38,9 +38,8 @@ class Loader
     public static function autoload($class)
     {
         // 检测命名空间别名
-        if (!empty(self::$namespaceAlias)){
+        if (!empty(self::$namespaceAlias)) {
             $namespace = dirname($class);
-       
             if (isset(self::$namespaceAlias[$namespace])) {
                 $original = self::$namespaceAlias[$namespace] . '\\' . basename($class);
                 if (class_exists($original)) {
@@ -48,13 +47,14 @@ class Loader
                 }
             }
         }
-      
-        if ($file = self::findFile($class)){
+
+        if ($file = self::findFile($class)) {
+
             // Win环境严格区分大小写
             if (IS_WIN && pathinfo($file, PATHINFO_FILENAME) != pathinfo(realpath($file), PATHINFO_FILENAME)) {
                 return false;
             }
-			
+
             __include_file($file);
             return true;
         }
@@ -67,23 +67,19 @@ class Loader
      */
     private static function findFile($class)
     {
-    	
         if (!empty(self::$map[$class])) {
             // 类库映射
             return self::$map[$class];
         }
+
         // 查找 PSR-4
         $logicalPathPsr4 = strtr($class, '\\', DS) . EXT;
-		
+
         $first = $class[0];
-		
         if (isset(self::$prefixLengthsPsr4[$first])) {
-			
             foreach (self::$prefixLengthsPsr4[$first] as $prefix => $length) {
                 if (0 === strpos($class, $prefix)) {
-					
                     foreach (self::$prefixDirsPsr4[$prefix] as $dir) {
-						
                         if (is_file($file = $dir . DS . substr($logicalPathPsr4, $length))) {
                             return $file;
                         }
@@ -98,7 +94,7 @@ class Loader
                 return $file;
             }
         }
- 		
+
         // 查找 PSR-0
         if (false !== $pos = strrpos($class, '\\')) {
             // namespaced class name
@@ -120,12 +116,14 @@ class Loader
                 }
             }
         }
+
         // 查找 PSR-0 fallback dirs
         foreach (self::$fallbackDirsPsr0 as $dir) {
             if (is_file($file = $dir . DS . $logicalPathPsr0)) {
                 return $file;
             }
         }
+
         return self::$map[$class] = false;
     }
 
@@ -138,6 +136,7 @@ class Loader
             self::$map[$class] = $map;
         }
     }
+
     // 注册命名空间
     public static function addNamespace($namespace, $path = '')
     {
@@ -240,27 +239,24 @@ class Loader
     // 注册自动加载机制
     public static function register($autoload = '')
     {
-		
-		// 注册系统自动加载
+        // 注册系统自动加载
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
-        
         // 注册命名空间定义
         self::addNamespace([
             'think'    => LIB_PATH . 'think' . DS,
             'behavior' => LIB_PATH . 'behavior' . DS,
             'traits'   => LIB_PATH . 'traits' . DS,
         ]);
-        
         // 加载类库映射文件
-   
         if (is_file(RUNTIME_PATH . 'classmap' . EXT)) {
             self::addClassMap(__include_file(RUNTIME_PATH . 'classmap' . EXT));
         }
-        
+
         // Composer自动加载支持
         if (is_dir(VENDOR_PATH . 'composer')) {
             self::registerComposerLoader();
         }
+
         // 自动加载extend目录
         self::$fallbackDirsPsr4[] = rtrim(EXTEND_PATH, DS);
     }
@@ -268,20 +264,20 @@ class Loader
     // 注册composer自动加载
     private static function registerComposerLoader()
     {
-    
         if (is_file(VENDOR_PATH . 'composer/autoload_namespaces.php')) {
             $map = require VENDOR_PATH . 'composer/autoload_namespaces.php';
             foreach ($map as $namespace => $path) {
                 self::addPsr0($namespace, $path);
             }
         }
-        
+
         if (is_file(VENDOR_PATH . 'composer/autoload_psr4.php')) {
             $map = require VENDOR_PATH . 'composer/autoload_psr4.php';
             foreach ($map as $namespace => $path) {
                 self::addPsr4($namespace, $path);
             }
         }
+
         if (is_file(VENDOR_PATH . 'composer/autoload_classmap.php')) {
             $classMap = require VENDOR_PATH . 'composer/autoload_classmap.php';
             if ($classMap) {
@@ -309,19 +305,16 @@ class Loader
      */
     public static function import($class, $baseUrl = '', $ext = EXT)
     {
-		
         static $_file = [];
         $key          = $class . $baseUrl;
         $class        = str_replace(['.', '#'], [DS, '.'], $class);
-       
         if (isset($_file[$key])) {
             return true;
         }
-		
+
         if (empty($baseUrl)) {
-			
             list($name, $class) = explode(DS, $class, 2);
-           
+
             if (isset(self::$prefixDirsPsr4[$name . '\\'])) {
                 // 注册的命名空间
                 $baseUrl = self::$prefixDirsPsr4[$name . '\\'];
@@ -337,10 +330,8 @@ class Loader
         } elseif (substr($baseUrl, -1) != DS) {
             $baseUrl .= DS;
         }
-			
         // 如果类存在 则导入类库文件
-		
-        if (is_array($baseUrl)){
+        if (is_array($baseUrl)) {
             foreach ($baseUrl as $path) {
                 $filename = $path . DS . $class . $ext;
                 if (is_file($filename)) {
@@ -350,13 +341,12 @@ class Loader
         } else {
             $filename = $baseUrl . $class . $ext;
         }
-		
+
         if (!empty($filename) && is_file($filename)) {
             // 开启调试模式Win环境严格区分大小写
             if (IS_WIN && pathinfo($filename, PATHINFO_FILENAME) != pathinfo(realpath($filename), PATHINFO_FILENAME)) {
                 return false;
             }
-			
             __include_file($filename);
             $_file[$key] = true;
             return true;
@@ -379,21 +369,22 @@ class Loader
         if (isset(self::$instance[$guid])) {
             return self::$instance[$guid];
         }
-        if (strpos($name, '/')) {
-            list($module, $name) = explode('/', $name, 2);
-        } else {
+        if (false !== strpos($name, '\\')) {
+            $class  = $name;
             $module = Request::instance()->module();
+        } else {
+            if (strpos($name, '/')) {
+                list($module, $name) = explode('/', $name, 2);
+            } else {
+                $module = Request::instance()->module();
+            }
+            $class = self::parseClass($module, $layer, $name, $appendSuffix);
         }
-        $class = self::parseClass($module, $layer, $name, $appendSuffix);
-       
         if (class_exists($class)) {
-        
             $model = new $class();
         } else {
             $class = str_replace('\\' . $module . '\\', '\\' . $common . '\\', $class);
-          
             if (class_exists($class)) {
-            	
                 $model = new $class();
             } else {
                 throw new ClassNotFoundException('class not exists:' . $class, $class);
@@ -414,16 +405,18 @@ class Loader
      */
     public static function controller($name, $layer = 'controller', $appendSuffix = false, $empty = '')
     {
-    	
-        if (strpos($name, '/')) {
-            list($module, $name) = explode('/', $name);
-        } else {
+        if (false !== strpos($name, '\\')) {
+            $class  = $name;
             $module = Request::instance()->module();
+        } else {
+            if (strpos($name, '/')) {
+                list($module, $name) = explode('/', $name);
+            } else {
+                $module = Request::instance()->module();
+            }
+            $class = self::parseClass($module, $layer, $name, $appendSuffix);
         }
-        $class = self::parseClass($module, $layer, $name, $appendSuffix);
-     
         if (class_exists($class)) {
-        	
             return App::invokeClass($class);
         } elseif ($empty && class_exists($emptyClass = self::parseClass($module, $layer, $empty, $appendSuffix))) {
             return new $emptyClass(Request::instance());
@@ -449,12 +442,17 @@ class Loader
         if (isset(self::$instance[$guid])) {
             return self::$instance[$guid];
         }
-        if (strpos($name, '/')) {
-            list($module, $name) = explode('/', $name);
-        } else {
+        if (false !== strpos($name, '\\')) {
+            $class  = $name;
             $module = Request::instance()->module();
+        } else {
+            if (strpos($name, '/')) {
+                list($module, $name) = explode('/', $name);
+            } else {
+                $module = Request::instance()->module();
+            }
+            $class = self::parseClass($module, $layer, $name, $appendSuffix);
         }
-        $class = self::parseClass($module, $layer, $name, $appendSuffix);
         if (class_exists($class)) {
             $validate = new $class;
         } else {
@@ -490,12 +488,10 @@ class Loader
      */
     public static function action($url, $vars = [], $layer = 'controller', $appendSuffix = false)
     {
-    	
         $info   = pathinfo($url);
         $action = $info['basename'];
         $module = '.' != $info['dirname'] ? $info['dirname'] : Request::instance()->controller();
         $class  = self::controller($module, $layer, $appendSuffix);
-       
         if ($class) {
             if (is_scalar($vars)) {
                 if (strpos($vars, '=')) {
@@ -513,14 +509,16 @@ class Loader
      * type 0 将Java风格转换为C的风格 1 将C风格转换为Java的风格
      * @param string  $name 字符串
      * @param integer $type 转换类型
+     * @param bool    $ucfirst 首字母是否大写（驼峰规则）
      * @return string
      */
-    public static function parseName($name, $type = 0)
+    public static function parseName($name, $type = 0, $ucfirst = true)
     {
         if ($type) {
-            return ucfirst(preg_replace_callback('/_([a-zA-Z])/', function ($match) {
+            $name = preg_replace_callback('/_([a-zA-Z])/', function ($match) {
                 return strtoupper($match[1]);
-            }, $name));
+            }, $name);
+            return $ucfirst ? ucfirst($name) : lcfirst($name);
         } else {
             return strtolower(trim(preg_replace("/[A-Z]/", "_\\0", $name), "_"));
         }
@@ -561,7 +559,6 @@ class Loader
  */
 function __include_file($file)
 {
-	
     return include $file;
 }
 
